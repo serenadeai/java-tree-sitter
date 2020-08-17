@@ -11,30 +11,30 @@ public class Node {
   public Node() {}
 
   public Node getChild(int child) {
-    return TreeSitterJNI.nodeChild(this, child);
+    return TreeSitter.nodeChild(this, child);
   }
 
   public int getChildCount() {
-    return TreeSitterJNI.nodeChildCount(this);
+    return TreeSitter.nodeChildCount(this);
   }
 
   public String getNodeString() {
-    return TreeSitterJNI.nodeString(this);
+    return TreeSitter.nodeString(this);
   }
 
   public String getType() {
-    return TreeSitterJNI.nodeType(this);
+    return TreeSitter.nodeType(this);
   }
 
   public int nodeEndByte() {
-    return TreeSitterJNI.nodeEndByte(this);
+    return TreeSitter.nodeEndByte(this);
   }
 
   public int nodeStartByte() {
-    return TreeSitterJNI.nodeStartByte(this);
+    return TreeSitter.nodeStartByte(this);
   }
 
   public TreeCursor walk() {
-    return TreeSitterJNI.treeCursorNew(this);
+    return TreeSitter.treeCursorNew(this);
   }
 }

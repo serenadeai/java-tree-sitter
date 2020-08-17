@@ -1,35 +1,7 @@
-#include "ai_serenade_treesitter_TreeSitterJNI.h"
+#include "ai_serenade_treesitter_TreeSitter.h"
 #include <jni.h>
 #include <string.h>
 #include <tree_sitter/api.h>
-
-extern "C" TSLanguage* tree_sitter_bash();
-extern "C" TSLanguage* tree_sitter_c();
-extern "C" TSLanguage* tree_sitter_c_sharp();
-extern "C" TSLanguage* tree_sitter_cpp();
-extern "C" TSLanguage* tree_sitter_css();
-extern "C" TSLanguage* tree_sitter_dart();
-extern "C" TSLanguage* tree_sitter_elm();
-extern "C" TSLanguage* tree_sitter_eno();
-extern "C" TSLanguage* tree_sitter_go();
-extern "C" TSLanguage* tree_sitter_html();
-extern "C" TSLanguage* tree_sitter_java();
-extern "C" TSLanguage* tree_sitter_javascript();
-extern "C" TSLanguage* tree_sitter_jsx();
-extern "C" TSLanguage* tree_sitter_lua();
-extern "C" TSLanguage* tree_sitter_markdown();
-extern "C" TSLanguage* tree_sitter_ocaml();
-extern "C" TSLanguage* tree_sitter_php();
-extern "C" TSLanguage* tree_sitter_python();
-extern "C" TSLanguage* tree_sitter_ruby();
-extern "C" TSLanguage* tree_sitter_rust();
-extern "C" TSLanguage* tree_sitter_scss();
-extern "C" TSLanguage* tree_sitter_toml();
-extern "C" TSLanguage* tree_sitter_tsx();
-extern "C" TSLanguage* tree_sitter_typescript();
-extern "C" TSLanguage* tree_sitter_vue();
-extern "C" TSLanguage* tree_sitter_yaml();
-extern "C" TSLanguage* tree_sitter_wasm();
 
 jobject _marshalNode(JNIEnv* env, TSNode node) {
   jclass javaClass = env->FindClass("ai/serenade/treesitter/Node");
@@ -119,8 +91,9 @@ void _updateTreeCursor(JNIEnv* env, jobject cursor, TSTreeCursor* treeCursor) {
 }
 
 JNIEXPORT jstring JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_cursorCurrentFieldName(
-    JNIEnv* env, jclass self, jobject cursor) {
+Java_ai_serenade_treesitter_TreeSitter_cursorCurrentFieldName(JNIEnv* env,
+                                                              jclass self,
+                                                              jobject cursor) {
   TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
   const char* name = ts_tree_cursor_current_field_name(&treeCursor);
   jstring result = env->NewStringUTF(name);
@@ -128,9 +101,8 @@ Java_ai_serenade_treesitter_TreeSitterJNI_cursorCurrentFieldName(
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_gotoFirstChild(JNIEnv* env,
-                                                         jclass self,
-                                                         jobject cursor) {
+Java_ai_serenade_treesitter_TreeSitter_gotoFirstChild(JNIEnv* env, jclass self,
+                                                      jobject cursor) {
   TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
   bool result = ts_tree_cursor_goto_first_child(&treeCursor);
   _updateTreeCursor(env, cursor, &treeCursor);
@@ -138,16 +110,15 @@ Java_ai_serenade_treesitter_TreeSitterJNI_gotoFirstChild(JNIEnv* env,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_gotoNextSibling(JNIEnv* env,
-                                                          jclass self,
-                                                          jobject cursor) {
+Java_ai_serenade_treesitter_TreeSitter_gotoNextSibling(JNIEnv* env, jclass self,
+                                                       jobject cursor) {
   TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
   bool result = ts_tree_cursor_goto_next_sibling(&treeCursor);
   _updateTreeCursor(env, cursor, &treeCursor);
   return (jboolean)result;
 }
 
-JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_gotoParent(
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_gotoParent(
     JNIEnv* env, jclass self, jobject cursor) {
   TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
   bool result = ts_tree_cursor_goto_parent(&treeCursor);
@@ -155,18 +126,18 @@ JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_gotoParent(
   return (jboolean)result;
 }
 
-JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_nodeChild(
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChild(
     JNIEnv* env, jclass self, jobject node, jint child) {
   return _marshalNode(
       env, ts_node_child(_unmarshalNode(env, node), (uint32_t)child));
 }
 
-JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_nodeChildCount(
+JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChildCount(
     JNIEnv* env, jclass self, jobject node) {
   return (jint)ts_node_child_count(_unmarshalNode(env, node));
 }
 
-JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_nodeString(
+JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeString(
     JNIEnv* env, jclass self, jobject node) {
   char* nodeString = ts_node_string(_unmarshalNode(env, node));
   jstring result = env->NewStringUTF(nodeString);
@@ -174,7 +145,7 @@ JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_nodeString(
   return result;
 }
 
-JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_nodeType(
+JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeType(
     JNIEnv* env, jclass self, jobject node) {
   const char* type = ts_node_type(_unmarshalNode(env, node));
   jstring result = env->NewStringUTF(type);
@@ -182,93 +153,26 @@ JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_nodeType(
 }
 
 JNIEXPORT jlong JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_parserNew(JNIEnv* env, jclass self) {
+Java_ai_serenade_treesitter_TreeSitter_parserNew(JNIEnv* env, jclass self) {
   return (jlong)ts_parser_new();
 }
 
-JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_parserDelete(
+JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_parserDelete(
     JNIEnv* env, jclass self, jlong parser) {
   ts_parser_delete((TSParser*)parser);
 }
 
-JNIEXPORT void JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_parserSetLanguage(
-    JNIEnv* env, jclass self, jlong parser, jstring language_name) {
-  const char* language = env->GetStringUTFChars(language_name, 0);
-  TSLanguage* parser_language;
-  if (strcmp(language, "bash") == 0) {
-    parser_language = tree_sitter_bash();
-  } else if (strcmp(language, "c") == 0) {
-    parser_language = tree_sitter_c();
-  } else if (strcmp(language, "c_sharp") == 0) {
-    parser_language = tree_sitter_c_sharp();
-  } else if (strcmp(language, "cpp") == 0) {
-    parser_language = tree_sitter_cpp();
-  } else if (strcmp(language, "css") == 0) {
-    parser_language = tree_sitter_css();
-  } else if (strcmp(language, "dart") == 0) {
-    parser_language = tree_sitter_dart();
-  } else if (strcmp(language, "elm") == 0) {
-    parser_language = tree_sitter_elm();
-  } else if (strcmp(language, "eno") == 0) {
-    parser_language = tree_sitter_eno();
-  } else if (strcmp(language, "go") == 0) {
-    parser_language = tree_sitter_go();
-  } else if (strcmp(language, "html") == 0) {
-    parser_language = tree_sitter_html();
-  } else if (strcmp(language, "java") == 0) {
-    parser_language = tree_sitter_java();
-  } else if (strcmp(language, "javascript") == 0) {
-    parser_language = tree_sitter_javascript();
-  } else if (strcmp(language, "jsx") == 0) {
-    parser_language = tree_sitter_jsx();
-  } else if (strcmp(language, "lua") == 0) {
-    parser_language = tree_sitter_lua();
-  } else if (strcmp(language, "markdown") == 0) {
-    parser_language = tree_sitter_markdown();
-  } else if (strcmp(language, "ocaml") == 0) {
-    parser_language = tree_sitter_ocaml();
-  } else if (strcmp(language, "php") == 0) {
-    parser_language = tree_sitter_php();
-  } else if (strcmp(language, "python") == 0) {
-    parser_language = tree_sitter_python();
-  } else if (strcmp(language, "ruby") == 0) {
-    parser_language = tree_sitter_ruby();
-  } else if (strcmp(language, "rust") == 0) {
-    parser_language = tree_sitter_rust();
-  } else if (strcmp(language, "scss") == 0) {
-    parser_language = tree_sitter_scss();
-  } else if (strcmp(language, "toml") == 0) {
-    parser_language = tree_sitter_toml();
-  } else if (strcmp(language, "tsx") == 0) {
-    parser_language = tree_sitter_tsx();
-  } else if (strcmp(language, "typescript") == 0) {
-    parser_language = tree_sitter_typescript();
-  } else if (strcmp(language, "vue") == 0) {
-    parser_language = tree_sitter_vue();
-  } else if (strcmp(language, "yaml") == 0) {
-    parser_language = tree_sitter_yaml();
-  } else if (strcmp(language, "wasm") == 0) {
-    parser_language = tree_sitter_wasm();
-  } else {
-    env->ReleaseStringUTFChars(language_name, language);
-    return;
-  }
-
-  ts_parser_set_language((TSParser*)parser, parser_language);
-  env->ReleaseStringUTFChars(language_name, language);
-}
-
-JNIEXPORT void JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_parserSetLanguagePointer(
+JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_parserSetLanguage(
     JNIEnv* env, jclass self, jlong parser, jlong language) {
   ts_parser_set_language((TSParser*)parser, (TSLanguage*)language);
 }
 
 JNIEXPORT jlong JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_parserParseString(
-    JNIEnv* env, jclass self, jlong parser, jstring source_string,
-    jint length) {
+Java_ai_serenade_treesitter_TreeSitter_parserParseString(JNIEnv* env,
+                                                         jclass self,
+                                                         jlong parser,
+                                                         jstring source_string,
+                                                         jint length) {
   const char* source = env->GetStringUTFChars(source_string, 0);
   jlong result =
       (jlong)ts_parser_parse_string((TSParser*)parser, NULL, source, length);
@@ -276,20 +180,17 @@ Java_ai_serenade_treesitter_TreeSitterJNI_parserParseString(
   return result;
 }
 
-JNIEXPORT jobject JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_treeCursorNew(JNIEnv* env,
-                                                        jclass self,
-                                                        jobject node) {
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorNew(
+    JNIEnv* env, jclass self, jobject node) {
   return _marshalTreeCursor(env, ts_tree_cursor_new(_unmarshalNode(env, node)));
 }
 
-JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitterJNI_treeDelete(
+JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeDelete(
     JNIEnv* env, jclass self, jlong tree) {
   ts_tree_delete((TSTree*)tree);
 }
 
-JNIEXPORT jobject JNICALL
-Java_ai_serenade_treesitter_TreeSitterJNI_treeRootNode(JNIEnv* env, jclass self,
-                                                       jlong tree) {
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_treeRootNode(
+    JNIEnv* env, jclass self, jlong tree) {
   return _marshalNode(env, ts_tree_root_node((TSTree*)tree));
 }

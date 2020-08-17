@@ -1,6 +1,6 @@
 package ai.serenade.treesitter;
 
-public class TreeSitterJNI {
+public class TreeSitter {
 
   static {
     System.loadLibrary("java-tree-sitter");
@@ -30,9 +30,7 @@ public class TreeSitterJNI {
 
   public static native void parserDelete(long parser);
 
-  public static native void parserSetLanguage(long parser, String language);
-
-  public static native void parserSetLanguagePointer(long parser, long language);
+  public static native void parserSetLanguage(long parser, long language);
 
   public static native long parserParseString(long parser, String source, int length);
 

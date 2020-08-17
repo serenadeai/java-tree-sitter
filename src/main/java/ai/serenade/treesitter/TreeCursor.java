@@ -9,18 +9,18 @@ public class TreeCursor {
   public TreeCursor() {}
 
   public String getCurrentFieldName() {
-    return TreeSitterJNI.cursorCurrentFieldName(this);
+    return TreeSitter.cursorCurrentFieldName(this);
   }
 
   public boolean gotoFirstChild() {
-    return TreeSitterJNI.gotoFirstChild(this);
+    return TreeSitter.gotoFirstChild(this);
   }
 
   public boolean gotoNextSibling() {
-    return TreeSitterJNI.gotoNextSibling(this);
+    return TreeSitter.gotoNextSibling(this);
   }
 
   public boolean gotoParent() {
-    return TreeSitterJNI.gotoParent(this);
+    return TreeSitter.gotoParent(this);
   }
 }

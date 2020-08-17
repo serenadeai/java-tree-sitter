@@ -8,23 +8,19 @@ public class Parser implements AutoCloseable {
   }
 
   public Parser() {
-    this(TreeSitterJNI.parserNew());
-  }
-
-  public void setLanguage(String language) {
-    TreeSitterJNI.parserSetLanguage(pointer, language);
+    this(TreeSitter.parserNew());
   }
 
   public void setLanguage(long language) {
-    TreeSitterJNI.parserSetLanguagePointer(pointer, language);
+    TreeSitter.parserSetLanguage(pointer, language);
   }
 
   public Tree parseString(String source) {
-    return new Tree(TreeSitterJNI.parserParseString(pointer, source, source.length()));
+    return new Tree(TreeSitter.parserParseString(pointer, source, source.length()));
   }
 
   @Override
   public void close() {
-    TreeSitterJNI.parserDelete(pointer);
+    TreeSitter.parserDelete(pointer);
   }
 }

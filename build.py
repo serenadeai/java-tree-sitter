@@ -17,7 +17,11 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
         raise ValueError("Must provide at least one language folder")
 
     cpp = False
-    source_paths = ["lib/ai_serenade_treesitter_TreeSitterJNI.cc"]
+    source_paths = [
+        "lib/ai_serenade_treesitter_TreeSitter.cc",
+        "lib/ai_serenade_treesitter_Languages.cc",
+    ]
+
     for repo_path in repo_paths:
         src_path = os.path.join(repo_path, "src")
         source_paths.append(os.path.join(src_path, "parser.c"))

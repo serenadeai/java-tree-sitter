@@ -9,10 +9,10 @@ public class Tree implements AutoCloseable {
 
   @Override
   public void close() {
-    TreeSitterJNI.treeDelete(pointer);
+    TreeSitter.treeDelete(pointer);
   }
 
   public Node rootNode() {
-    return TreeSitterJNI.treeRootNode(pointer);
+    return TreeSitter.treeRootNode(pointer);
   }
 }
