@@ -1,0 +1,27 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+}
+
+repositories {
+    mavenCentral()
+}
+
+compileJava {
+    options.compilerArgs += ["-h", "${project.projectDir.toString()}/lib"]
+}
+
+dependencies {
+    testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+tasks.withType(Test) {
+    systemProperty "java.library.path", "${project.projectDir.toString()}"
+}
