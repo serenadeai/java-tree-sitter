@@ -6,14 +6,6 @@ public class TreeSitter {
     System.loadLibrary("java-tree-sitter");
   }
 
-  public static native String cursorCurrentFieldName(TreeCursor cursor);
-
-  public static native boolean gotoFirstChild(TreeCursor cursor);
-
-  public static native boolean gotoNextSibling(TreeCursor cursor);
-
-  public static native boolean gotoParent(TreeCursor cursor);
-
   public static native Node nodeChild(Node node, int child);
 
   public static native int nodeChildCount(Node node);
@@ -35,6 +27,16 @@ public class TreeSitter {
   public static native long parserParseString(long parser, String source, int length);
 
   public static native TreeCursor treeCursorNew(Node node);
+
+  public static native String treeCursorCurrentFieldName(TreeCursor cursor);
+
+  public static native Node treeCursorCurrentNode(TreeCursor cursor);
+
+  public static native boolean treeCursorGotoFirstChild(TreeCursor cursor);
+
+  public static native boolean treeCursorGotoNextSibling(TreeCursor cursor);
+
+  public static native boolean treeCursorGotoParent(TreeCursor cursor);
 
   public static native void treeDelete(long tree);
 

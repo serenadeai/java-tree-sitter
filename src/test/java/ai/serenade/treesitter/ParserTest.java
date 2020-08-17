@@ -13,7 +13,7 @@ public class ParserTest {
       try (Tree tree = parser.parseString("print(\"hi\")")) {
         assertEquals(
           "(module (expression_statement (call function: (identifier) arguments: (argument_list (string)))))",
-          tree.rootNode().getNodeString()
+          tree.getRootNode().getNodeString()
         );
       }
     }

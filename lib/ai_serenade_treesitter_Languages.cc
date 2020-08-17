@@ -11,6 +11,7 @@ extern "C" TSLanguage* tree_sitter_cpp();
 extern "C" TSLanguage* tree_sitter_css();
 extern "C" TSLanguage* tree_sitter_dart();
 extern "C" TSLanguage* tree_sitter_elm();
+extern "C" TSLanguage* tree_sitter_embedded_template();
 extern "C" TSLanguage* tree_sitter_eno();
 extern "C" TSLanguage* tree_sitter_go();
 extern "C" TSLanguage* tree_sitter_haskell();
@@ -75,6 +76,11 @@ Java_ai_serenade_treesitter_Languages_dart(JNIEnv* env, jclass self) {
 JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_elm(JNIEnv* env,
                                                                   jclass self) {
   return (jlong)tree_sitter_elm();
+}
+
+JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_embeddedTemplate(
+    JNIEnv* env, jclass self) {
+  return (jlong)tree_sitter_embedded_template();
 }
 
 JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_eno(JNIEnv* env,

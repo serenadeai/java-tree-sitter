@@ -12,7 +12,7 @@ public class Tree implements AutoCloseable {
     TreeSitter.treeDelete(pointer);
   }
 
-  public Node rootNode() {
+  public Node getRootNode() {
     return TreeSitter.treeRootNode(pointer);
   }
 }

@@ -7,8 +7,20 @@ repositories {
     mavenCentral()
 }
 
+task buildSharedObject {
+    doLast {
+        exec {
+            commandLine "./build.py", "src/test/tree-sitter-python"
+        }
+    }
+}
+
 compileJava {
     options.compilerArgs += ["-h", "${project.projectDir.toString()}/lib"]
+}
+
+compileTestJava {
+    dependsOn buildSharedObject
 }
 
 dependencies {

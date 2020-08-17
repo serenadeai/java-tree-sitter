@@ -8,19 +8,23 @@ public class TreeCursor {
 
   public TreeCursor() {}
 
+  public Node getCurrentNode() {
+    return TreeSitter.treeCursorCurrentNode(this);
+  }
+
   public String getCurrentFieldName() {
-    return TreeSitter.cursorCurrentFieldName(this);
+    return TreeSitter.treeCursorCurrentFieldName(this);
   }
 
   public boolean gotoFirstChild() {
-    return TreeSitter.gotoFirstChild(this);
+    return TreeSitter.treeCursorGotoFirstChild(this);
   }
 
   public boolean gotoNextSibling() {
-    return TreeSitter.gotoNextSibling(this);
+    return TreeSitter.treeCursorGotoNextSibling(this);
   }
 
   public boolean gotoParent() {
-    return TreeSitter.gotoParent(this);
+    return TreeSitter.treeCursorGotoParent(this);
   }
 }

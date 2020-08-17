@@ -18,6 +18,8 @@ public class Languages {
 
   public static native long elm();
 
+  public static native long embeddedTemplate();
+
   public static native long eno();
 
   public static native long go();

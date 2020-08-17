@@ -9,38 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     ai_serenade_treesitter_TreeSitter
- * Method:    cursorCurrentFieldName
- * Signature: (Lai/serenade/treesitter/TreeCursor;)Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_cursorCurrentFieldName
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     ai_serenade_treesitter_TreeSitter
- * Method:    gotoFirstChild
- * Signature: (Lai/serenade/treesitter/TreeCursor;)Z
- */
-JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_gotoFirstChild
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     ai_serenade_treesitter_TreeSitter
- * Method:    gotoNextSibling
- * Signature: (Lai/serenade/treesitter/TreeCursor;)Z
- */
-JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_gotoNextSibling
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     ai_serenade_treesitter_TreeSitter
- * Method:    gotoParent
- * Signature: (Lai/serenade/treesitter/TreeCursor;)Z
- */
-JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_gotoParent
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     ai_serenade_treesitter_TreeSitter
  * Method:    nodeChild
  * Signature: (Lai/serenade/treesitter/Node;I)Lai/serenade/treesitter/Node;
  */
@@ -125,6 +93,46 @@ JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_parserParseString
  * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/TreeCursor;
  */
 JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorNew
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    treeCursorCurrentFieldName
+ * Signature: (Lai/serenade/treesitter/TreeCursor;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentFieldName
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    treeCursorCurrentNode
+ * Signature: (Lai/serenade/treesitter/TreeCursor;)Lai/serenade/treesitter/Node;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentNode
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    treeCursorGotoFirstChild
+ * Signature: (Lai/serenade/treesitter/TreeCursor;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoFirstChild
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    treeCursorGotoNextSibling
+ * Signature: (Lai/serenade/treesitter/TreeCursor;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoNextSibling
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    treeCursorGotoParent
+ * Signature: (Lai/serenade/treesitter/TreeCursor;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoParent
   (JNIEnv *, jclass, jobject);
 
 /*

@@ -73,6 +73,14 @@ JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_elm
 
 /*
  * Class:     ai_serenade_treesitter_Languages
+ * Method:    embeddedTemplate
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_embeddedTemplate
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     ai_serenade_treesitter_Languages
  * Method:    eno
  * Signature: ()J
  */
