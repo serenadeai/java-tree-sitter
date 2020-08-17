@@ -3,16 +3,33 @@
 #include <string.h>
 #include <tree_sitter/api.h>
 
+extern "C" TSLanguage* tree_sitter_bash();
+extern "C" TSLanguage* tree_sitter_c();
+extern "C" TSLanguage* tree_sitter_c_sharp();
+extern "C" TSLanguage* tree_sitter_cpp();
 extern "C" TSLanguage* tree_sitter_css();
 extern "C" TSLanguage* tree_sitter_dart();
+extern "C" TSLanguage* tree_sitter_elm();
+extern "C" TSLanguage* tree_sitter_eno();
+extern "C" TSLanguage* tree_sitter_go();
 extern "C" TSLanguage* tree_sitter_html();
 extern "C" TSLanguage* tree_sitter_java();
 extern "C" TSLanguage* tree_sitter_javascript();
 extern "C" TSLanguage* tree_sitter_jsx();
+extern "C" TSLanguage* tree_sitter_lua();
+extern "C" TSLanguage* tree_sitter_markdown();
+extern "C" TSLanguage* tree_sitter_ocaml();
+extern "C" TSLanguage* tree_sitter_php();
 extern "C" TSLanguage* tree_sitter_python();
+extern "C" TSLanguage* tree_sitter_ruby();
+extern "C" TSLanguage* tree_sitter_rust();
 extern "C" TSLanguage* tree_sitter_scss();
+extern "C" TSLanguage* tree_sitter_toml();
 extern "C" TSLanguage* tree_sitter_tsx();
 extern "C" TSLanguage* tree_sitter_typescript();
+extern "C" TSLanguage* tree_sitter_vue();
+extern "C" TSLanguage* tree_sitter_yaml();
+extern "C" TSLanguage* tree_sitter_wasm();
 
 jobject _marshalNode(JNIEnv* env, TSNode node) {
   jclass javaClass = env->FindClass("ai/serenade/treesitter/Node");
@@ -179,10 +196,24 @@ Java_ai_serenade_treesitter_TreeSitterJNI_parserSetLanguage(
     JNIEnv* env, jclass self, jlong parser, jstring language_name) {
   const char* language = env->GetStringUTFChars(language_name, 0);
   TSLanguage* parser_language;
-  if (strcmp(language, "css") == 0) {
+  if (strcmp(language, "bash") == 0) {
+    parser_language = tree_sitter_bash();
+  } else if (strcmp(language, "c") == 0) {
+    parser_language = tree_sitter_c();
+  } else if (strcmp(language, "c_sharp") == 0) {
+    parser_language = tree_sitter_c_sharp();
+  } else if (strcmp(language, "cpp") == 0) {
+    parser_language = tree_sitter_cpp();
+  } else if (strcmp(language, "css") == 0) {
     parser_language = tree_sitter_css();
   } else if (strcmp(language, "dart") == 0) {
     parser_language = tree_sitter_dart();
+  } else if (strcmp(language, "elm") == 0) {
+    parser_language = tree_sitter_elm();
+  } else if (strcmp(language, "eno") == 0) {
+    parser_language = tree_sitter_eno();
+  } else if (strcmp(language, "go") == 0) {
+    parser_language = tree_sitter_go();
   } else if (strcmp(language, "html") == 0) {
     parser_language = tree_sitter_html();
   } else if (strcmp(language, "java") == 0) {
@@ -191,14 +222,34 @@ Java_ai_serenade_treesitter_TreeSitterJNI_parserSetLanguage(
     parser_language = tree_sitter_javascript();
   } else if (strcmp(language, "jsx") == 0) {
     parser_language = tree_sitter_jsx();
+  } else if (strcmp(language, "lua") == 0) {
+    parser_language = tree_sitter_lua();
+  } else if (strcmp(language, "markdown") == 0) {
+    parser_language = tree_sitter_markdown();
+  } else if (strcmp(language, "ocaml") == 0) {
+    parser_language = tree_sitter_ocaml();
+  } else if (strcmp(language, "php") == 0) {
+    parser_language = tree_sitter_php();
   } else if (strcmp(language, "python") == 0) {
     parser_language = tree_sitter_python();
+  } else if (strcmp(language, "ruby") == 0) {
+    parser_language = tree_sitter_ruby();
+  } else if (strcmp(language, "rust") == 0) {
+    parser_language = tree_sitter_rust();
   } else if (strcmp(language, "scss") == 0) {
     parser_language = tree_sitter_scss();
+  } else if (strcmp(language, "toml") == 0) {
+    parser_language = tree_sitter_toml();
   } else if (strcmp(language, "tsx") == 0) {
     parser_language = tree_sitter_tsx();
   } else if (strcmp(language, "typescript") == 0) {
     parser_language = tree_sitter_typescript();
+  } else if (strcmp(language, "vue") == 0) {
+    parser_language = tree_sitter_vue();
+  } else if (strcmp(language, "yaml") == 0) {
+    parser_language = tree_sitter_yaml();
+  } else if (strcmp(language, "wasm") == 0) {
+    parser_language = tree_sitter_wasm();
   } else {
     env->ReleaseStringUTFChars(language_name, language);
     return;

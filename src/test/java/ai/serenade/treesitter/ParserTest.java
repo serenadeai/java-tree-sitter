@@ -12,7 +12,10 @@ public class ParserTest {
     try (Parser parser = new Parser()) {
       parser.setLanguage("python");
       try (Tree tree = parser.parseString("print(\"hi\")")) {
-        System.out.println(tree.rootNode().getNodeString());
+        assertEquals(
+          "(module (expression_statement (call function: (identifier) arguments: (argument_list (string)))))",
+          tree.rootNode().getNodeString()
+        );
       }
     }
   }
