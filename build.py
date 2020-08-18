@@ -35,7 +35,7 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
             source_paths.append(scanner_c)
 
         compiler.define_macro(
-            f"TS_LANGUAGE_{os.path.split(repo_path.rstrip('/'))[1].lstrip('tree-sitter-').replace('-', '_').upper()}",
+            f"TS_LANGUAGE_{os.path.split(repo_path.rstrip('/'))[1].split('tree-sitter-')[-1].replace('-', '_').upper()}",
             "1",
         )
 
