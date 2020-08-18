@@ -1,93 +1,114 @@
 #include "ai_serenade_treesitter_TreeSitter.h"
+
 #include <jni.h>
 #include <string.h>
 #include <tree_sitter/api.h>
 
+static jint JNI_VERSION = JNI_VERSION_10;
+
+static jclass _nodeClass;
+static jfieldID _nodeContext0Field;
+static jfieldID _nodeContext1Field;
+static jfieldID _nodeContext2Field;
+static jfieldID _nodeContext3Field;
+static jfieldID _nodeIdField;
+static jfieldID _nodeTreeField;
+
+static jclass _treeCursorClass;
+static jfieldID _treeCursorContext0Field;
+static jfieldID _treeCursorContext1Field;
+static jfieldID _treeCursorIdField;
+static jfieldID _treeCursorTreeField;
+
+#define _loadClass(VARIABLE, NAME)             \
+  {                                            \
+    jclass tmp;                                \
+    tmp = env->FindClass(NAME);                \
+    VARIABLE = (jclass)env->NewGlobalRef(tmp); \
+    env->DeleteLocalRef(tmp);                  \
+  }
+
+#define _loadField(VARIABLE, CLASS, NAME, TYPE) \
+  { VARIABLE = env->GetFieldID(CLASS, NAME, TYPE); }
+
+jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+  JNIEnv* env;
+  if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION) != JNI_OK) {
+    return JNI_ERR;
+  }
+
+  _loadClass(_nodeClass, "ai/serenade/treesitter/Node");
+  _loadField(_nodeContext0Field, _nodeClass, "context0", "I");
+  _loadField(_nodeContext1Field, _nodeClass, "context1", "I");
+  _loadField(_nodeContext2Field, _nodeClass, "context2", "I");
+  _loadField(_nodeContext3Field, _nodeClass, "context3", "I");
+  _loadField(_nodeIdField, _nodeClass, "id", "J");
+  _loadField(_nodeTreeField, _nodeClass, "tree", "J");
+
+  _loadClass(_treeCursorClass, "ai/serenade/treesitter/TreeCursor");
+  _loadField(_treeCursorContext0Field, _treeCursorClass, "context0", "I");
+  _loadField(_treeCursorContext1Field, _treeCursorClass, "context1", "I");
+  _loadField(_treeCursorIdField, _treeCursorClass, "id", "J");
+  _loadField(_treeCursorTreeField, _treeCursorClass, "tree", "J");
+
+  return JNI_VERSION;
+}
+
+void JNI_OnUnload(JavaVM* vm, void* reserved) {
+  JNIEnv* env;
+  vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION);
+
+  env->DeleteGlobalRef(_nodeClass);
+  env->DeleteGlobalRef(_treeCursorClass);
+}
+
 jobject _marshalNode(JNIEnv* env, TSNode node) {
-  jclass javaClass = env->FindClass("ai/serenade/treesitter/Node");
-  jobject javaObject = env->AllocObject(javaClass);
-
-  jfieldID context0Field = env->GetFieldID(javaClass, "context0", "I");
-  jfieldID context1Field = env->GetFieldID(javaClass, "context1", "I");
-  jfieldID context2Field = env->GetFieldID(javaClass, "context2", "I");
-  jfieldID context3Field = env->GetFieldID(javaClass, "context3", "I");
-  jfieldID idField = env->GetFieldID(javaClass, "id", "J");
-  jfieldID treeField = env->GetFieldID(javaClass, "tree", "J");
-
-  env->SetIntField(javaObject, context0Field, node.context[0]);
-  env->SetIntField(javaObject, context1Field, node.context[1]);
-  env->SetIntField(javaObject, context2Field, node.context[2]);
-  env->SetIntField(javaObject, context3Field, node.context[3]);
-  env->SetLongField(javaObject, idField, (jlong)node.id);
-  env->SetLongField(javaObject, treeField, (jlong)node.tree);
-
+  jobject javaObject = env->AllocObject(_nodeClass);
+  env->SetIntField(javaObject, _nodeContext0Field, node.context[0]);
+  env->SetIntField(javaObject, _nodeContext1Field, node.context[1]);
+  env->SetIntField(javaObject, _nodeContext2Field, node.context[2]);
+  env->SetIntField(javaObject, _nodeContext3Field, node.context[3]);
+  env->SetLongField(javaObject, _nodeIdField, (jlong)node.id);
+  env->SetLongField(javaObject, _nodeTreeField, (jlong)node.tree);
   return javaObject;
 }
 
 TSNode _unmarshalNode(JNIEnv* env, jobject javaObject) {
-  jclass javaClass = env->FindClass("ai/serenade/treesitter/Node");
-  jfieldID context0Field = env->GetFieldID(javaClass, "context0", "I");
-  jfieldID context1Field = env->GetFieldID(javaClass, "context1", "I");
-  jfieldID context2Field = env->GetFieldID(javaClass, "context2", "I");
-  jfieldID context3Field = env->GetFieldID(javaClass, "context3", "I");
-  jfieldID idField = env->GetFieldID(javaClass, "id", "J");
-  jfieldID treeField = env->GetFieldID(javaClass, "tree", "J");
-
-  return (TSNode){{
-                      (uint32_t)env->GetIntField(javaObject, context0Field),
-                      (uint32_t)env->GetIntField(javaObject, context1Field),
-                      (uint32_t)env->GetIntField(javaObject, context2Field),
-                      (uint32_t)env->GetIntField(javaObject, context3Field),
-                  },
-                  (const void*)env->GetLongField(javaObject, idField),
-                  (const TSTree*)env->GetLongField(javaObject, treeField)};
-}
-
-TSTreeCursor _unmarshalTreeCursor(JNIEnv* env, jobject javaObject) {
-  jclass javaClass = env->FindClass("ai/serenade/treesitter/TreeCursor");
-  jfieldID context0Field = env->GetFieldID(javaClass, "context0", "I");
-  jfieldID context1Field = env->GetFieldID(javaClass, "context1", "I");
-  jfieldID idField = env->GetFieldID(javaClass, "id", "J");
-  jfieldID treeField = env->GetFieldID(javaClass, "tree", "J");
-
-  return (TSTreeCursor){
-      (const void*)env->GetLongField(javaObject, treeField),
-      (const void*)env->GetLongField(javaObject, idField),
+  return (TSNode){
       {
-          (uint32_t)env->GetIntField(javaObject, context0Field),
-          (uint32_t)env->GetIntField(javaObject, context1Field),
-      }};
+          (uint32_t)env->GetIntField(javaObject, _nodeContext0Field),
+          (uint32_t)env->GetIntField(javaObject, _nodeContext1Field),
+          (uint32_t)env->GetIntField(javaObject, _nodeContext2Field),
+          (uint32_t)env->GetIntField(javaObject, _nodeContext3Field),
+      },
+      (const void*)env->GetLongField(javaObject, _nodeIdField),
+      (const TSTree*)env->GetLongField(javaObject, _nodeTreeField)};
 }
 
 jobject _marshalTreeCursor(JNIEnv* env, TSTreeCursor cursor) {
-  jclass javaClass = env->FindClass("ai/serenade/treesitter/TreeCursor");
-  jobject javaObject = env->AllocObject(javaClass);
-
-  jfieldID context0Field = env->GetFieldID(javaClass, "context0", "I");
-  jfieldID context1Field = env->GetFieldID(javaClass, "context1", "I");
-  jfieldID idField = env->GetFieldID(javaClass, "id", "J");
-  jfieldID treeField = env->GetFieldID(javaClass, "tree", "J");
-
-  env->SetIntField(javaObject, context0Field, cursor.context[0]);
-  env->SetIntField(javaObject, context1Field, cursor.context[1]);
-  env->SetLongField(javaObject, idField, (jlong)cursor.id);
-  env->SetLongField(javaObject, treeField, (jlong)cursor.tree);
-
+  jobject javaObject = env->AllocObject(_treeCursorClass);
+  env->SetIntField(javaObject, _treeCursorContext0Field, cursor.context[0]);
+  env->SetIntField(javaObject, _treeCursorContext1Field, cursor.context[1]);
+  env->SetLongField(javaObject, _treeCursorIdField, (jlong)cursor.id);
+  env->SetLongField(javaObject, _treeCursorTreeField, (jlong)cursor.tree);
   return javaObject;
 }
 
+TSTreeCursor _unmarshalTreeCursor(JNIEnv* env, jobject javaObject) {
+  return (TSTreeCursor){
+      (const void*)env->GetLongField(javaObject, _treeCursorTreeField),
+      (const void*)env->GetLongField(javaObject, _treeCursorIdField),
+      {
+          (uint32_t)env->GetIntField(javaObject, _treeCursorContext0Field),
+          (uint32_t)env->GetIntField(javaObject, _treeCursorContext1Field),
+      }};
+}
+
 void _updateTreeCursor(JNIEnv* env, jobject cursor, TSTreeCursor* treeCursor) {
-  jclass javaClass = env->FindClass("ai/serenade/treesitter/TreeCursor");
-
-  jfieldID context0Field = env->GetFieldID(javaClass, "context0", "I");
-  jfieldID context1Field = env->GetFieldID(javaClass, "context1", "I");
-  jfieldID idField = env->GetFieldID(javaClass, "id", "J");
-  jfieldID treeField = env->GetFieldID(javaClass, "tree", "J");
-
-  env->SetIntField(cursor, context0Field, treeCursor->context[0]);
-  env->SetIntField(cursor, context1Field, treeCursor->context[1]);
-  env->SetLongField(cursor, idField, (jlong)treeCursor->id);
-  env->SetLongField(cursor, treeField, (jlong)treeCursor->tree);
+  env->SetIntField(cursor, _treeCursorContext0Field, treeCursor->context[0]);
+  env->SetIntField(cursor, _treeCursorContext1Field, treeCursor->context[1]);
+  env->SetLongField(cursor, _treeCursorIdField, (jlong)treeCursor->id);
+  env->SetLongField(cursor, _treeCursorTreeField, (jlong)treeCursor->tree);
 }
 
 JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChild(

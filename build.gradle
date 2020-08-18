@@ -11,7 +11,14 @@ repositories {
     mavenCentral()
 }
 
+
 task buildSharedObject {
+    inputs.file "lib/ai_serenade_treesitter_Languages.cc"
+    inputs.file "lib/ai_serenade_treesitter_Languages.h"
+    inputs.file "lib/ai_serenade_treesitter_TreeSitter.cc"
+    inputs.file "lib/ai_serenade_treesitter_TreeSitter.h"
+    outputs.file "libjava-tree-sitter.so"
+
     doLast {
         exec {
             commandLine "./build.py", "libjava-tree-sitter.so", "src/test/tree-sitter-python"
@@ -19,12 +26,12 @@ task buildSharedObject {
     }
 }
 
-compileJava {
-    options.compilerArgs += ["-h", "${project.projectDir.toString()}/lib"]
+clean {
+    delete "libjava-tree-sitter.so"
 }
 
-compileTestJava {
-    dependsOn buildSharedObject
+compileJava {
+    options.compilerArgs += ["-h", "${project.projectDir.toString()}/lib"]
 }
 
 dependencies {
@@ -40,6 +47,8 @@ publishing {
 }
 
 test {
+    dependsOn buildSharedObject
+
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
