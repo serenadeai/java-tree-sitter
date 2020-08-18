@@ -18,20 +18,20 @@ public class Node {
     return TreeSitter.nodeChildCount(this);
   }
 
+  public int getEndByte() {
+    return TreeSitter.nodeEndByte(this);
+  }
+
   public String getNodeString() {
     return TreeSitter.nodeString(this);
   }
 
+  public int getStartByte() {
+    return TreeSitter.nodeStartByte(this);
+  }
+
   public String getType() {
     return TreeSitter.nodeType(this);
-  }
-
-  public int nodeEndByte() {
-    return TreeSitter.nodeEndByte(this);
-  }
-
-  public int nodeStartByte() {
-    return TreeSitter.nodeStartByte(this);
   }
 
   public TreeCursor walk() {

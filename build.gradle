@@ -3,14 +3,18 @@ plugins {
     id "maven-publish"
 }
 
+group = "ai.serenade"
+version = "1.0.0"
+
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 task buildSharedObject {
     doLast {
         exec {
-            commandLine "./build.py", "src/test/tree-sitter-python"
+            commandLine "./build.py", "libjava-tree-sitter.so", "src/test/tree-sitter-python"
         }
     }
 }
@@ -25,6 +29,14 @@ compileTestJava {
 
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 test {

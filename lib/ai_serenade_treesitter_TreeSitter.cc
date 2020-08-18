@@ -109,6 +109,16 @@ JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeString(
   return result;
 }
 
+JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeEndByte(
+    JNIEnv* env, jclass self, jobject node) {
+  return (jint)ts_node_end_byte(_unmarshalNode(env, node));
+}
+
+JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeStartByte(
+    JNIEnv* env, jclass self, jobject node) {
+  return (jint)ts_node_start_byte(_unmarshalNode(env, node));
+}
+
 JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeType(
     JNIEnv* env, jclass self, jobject node) {
   const char* type = ts_node_type(_unmarshalNode(env, node));

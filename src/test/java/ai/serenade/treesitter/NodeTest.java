@@ -14,6 +14,8 @@ public class NodeTest {
         Node root = tree.getRootNode();
         assertEquals(1, root.getChildCount());
         assertEquals("module", root.getType());
+        assertEquals(0, root.getStartByte());
+        assertEquals(44, root.getEndByte());
 
         Node function = root.getChild(0);
         assertEquals("function_definition", function.getType());

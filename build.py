@@ -10,16 +10,16 @@ import tempfile
 
 # adapted from https://github.com/tree-sitter/py-tree-sitter
 def build(repo_paths, output_path="libjava-tree-sitter.so"):
-    os.system("make -C tree-sitter > /dev/null")
-    output_mtime = os.path.getmtime(output_path) if os.path.exists(output_path) else 0
-
     if not repo_paths:
         raise ValueError("Must provide at least one language folder")
 
+    here = os.path.dirname(os.path.realpath(__file__))
+    os.system(f"make -C {os.path.join(here, 'tree-sitter')} > /dev/null")
+
     cpp = False
     source_paths = [
-        "lib/ai_serenade_treesitter_TreeSitter.cc",
-        "lib/ai_serenade_treesitter_Languages.cc",
+        os.path.join(here, "lib", "ai_serenade_treesitter_TreeSitter.cc"),
+        os.path.join(here, "lib", "ai_serenade_treesitter_Languages.cc"),
     ]
 
     for repo_path in repo_paths:
@@ -34,16 +34,17 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
             source_paths.append(scanner_c)
 
     source_mtimes = [os.path.getmtime(__file__)] + [
-        os.path.getmtime(path_) for path_ in source_paths
+        os.path.getmtime(path) for path in source_paths
     ]
 
     compiler = distutils.ccompiler.new_compiler()
     if cpp:
-        if ctypes.util.find_library("c++"):
-            compiler.add_library("c++")
-        elif ctypes.util.find_library("stdc++"):
+        if ctypes.util.find_library("stdc++"):
             compiler.add_library("stdc++")
+        elif ctypes.util.find_library("c++"):
+            compiler.add_library("c++")
 
+    output_mtime = os.path.getmtime(output_path) if os.path.exists(output_path) else 0
     if max(source_mtimes) <= output_mtime:
         return False
 
@@ -58,16 +59,22 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
             if source_path.endswith(".c"):
                 flags.append("-std=c99")
 
+            include_dirs = [
+                os.path.dirname(source_path),
+                os.path.join(here, "tree-sitter", "lib", "include"),
+                os.path.join(os.environ["JAVA_HOME"], "include"),
+            ]
+
+            if platform.system() == "Linux":
+                include_dirs.append(
+                    os.path.join(os.environ["JAVA_HOME"], "include", "linux")
+                )
+
             object_paths.append(
                 compiler.compile(
                     [source_path],
                     output_dir=out_dir,
-                    include_dirs=[
-                        os.path.dirname(source_path),
-                        "tree-sitter/lib/include",
-                        f"{os.environ['JAVA_HOME']}/include",
-                        f"{os.environ['JAVA_HOME']}/include/linux",
-                    ],
+                    include_dirs=include_dirs,
                     extra_preargs=flags,
                 )[0]
             )
@@ -75,17 +82,18 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
         compiler.link_shared_object(
             object_paths,
             output_path,
-            extra_postargs=["tree-sitter/libtree-sitter.a"],
-            library_dirs=["./tree-sitter"],
+            extra_postargs=[os.path.join(here, "tree-sitter", "libtree-sitter.a")],
+            library_dirs=[os.path.join(here, "tree-sitter")],
         )
 
     return True
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: build.py ./tree-sitter-python ./tree-sitter-javascript")
+    if len(sys.argv) < 3:
+        print(
+            "Usage: build.py libjava-tree-sitter.so ./tree-sitter-python ./tree-sitter-javascript"
+        )
         sys.exit(1)
 
-    distutils.log.set_verbosity(1)
-    build(sys.argv[1:])
+    build(sys.argv[2:], sys.argv[1])
