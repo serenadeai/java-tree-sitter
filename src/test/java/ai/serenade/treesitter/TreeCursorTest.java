@@ -29,6 +29,10 @@ public class TreeCursorTest {
         assertEquals("block", cursor.getCurrentNode().getType());
         assertEquals("body", cursor.getCurrentFieldName());
         assertEquals(false, cursor.gotoNextSibling());
+
+        assertEquals(true, cursor.gotoParent());
+        assertEquals("function_definition", cursor.getCurrentNode().getType());
+        assertEquals(true, cursor.gotoFirstChild());
       }
     }
   }

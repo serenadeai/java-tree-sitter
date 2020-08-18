@@ -32,8 +32,6 @@ public class Languages {
 
   public static native long javascript();
 
-  public static native long jsx();
-
   public static native long julia();
 
   public static native long kotlin();

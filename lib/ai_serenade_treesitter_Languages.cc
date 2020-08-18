@@ -18,7 +18,6 @@ extern "C" TSLanguage* tree_sitter_haskell();
 extern "C" TSLanguage* tree_sitter_html();
 extern "C" TSLanguage* tree_sitter_java();
 extern "C" TSLanguage* tree_sitter_javascript();
-extern "C" TSLanguage* tree_sitter_jsx();
 extern "C" TSLanguage* tree_sitter_julia();
 extern "C" TSLanguage* tree_sitter_kotlin();
 extern "C" TSLanguage* tree_sitter_lua();
@@ -111,11 +110,6 @@ Java_ai_serenade_treesitter_Languages_java(JNIEnv* env, jclass self) {
 JNIEXPORT jlong JNICALL
 Java_ai_serenade_treesitter_Languages_javascript(JNIEnv* env, jclass self) {
   return (jlong)tree_sitter_javascript();
-}
-
-JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_jsx(JNIEnv* env,
-                                                                  jclass self) {
-  return (jlong)tree_sitter_jsx();
 }
 
 JNIEXPORT jlong JNICALL
