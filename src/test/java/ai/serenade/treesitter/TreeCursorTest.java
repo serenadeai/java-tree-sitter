@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class TreeCursorTest {
+public class TreeCursorTest extends TestBase {
 
   @Test
   void testWalk() {

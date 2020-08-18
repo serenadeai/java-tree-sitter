@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class NodeTest {
+public class NodeTest extends TestBase {
 
   @Test
   void testGetChildren() {

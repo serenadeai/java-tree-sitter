@@ -129,14 +129,6 @@ JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_javascript
 
 /*
  * Class:     ai_serenade_treesitter_Languages
- * Method:    jsx
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_jsx
-  (JNIEnv *, jclass);
-
-/*
- * Class:     ai_serenade_treesitter_Languages
  * Method:    julia
  * Signature: ()J
  */

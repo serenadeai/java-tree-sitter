@@ -44,8 +44,6 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
-}
 
-tasks.withType(Test) {
-    systemProperty "java.library.path", "${project.projectDir.toString()}"
+    environment "JAVA_TREE_SITTER", "${project.projectDir.toString()}/libjava-tree-sitter.so"
 }

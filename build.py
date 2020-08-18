@@ -22,6 +22,7 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
         os.path.join(here, "lib", "ai_serenade_treesitter_Languages.cc"),
     ]
 
+    compiler = distutils.ccompiler.new_compiler()
     for repo_path in repo_paths:
         src_path = os.path.join(repo_path, "src")
         source_paths.append(os.path.join(src_path, "parser.c"))
@@ -33,11 +34,15 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
         elif os.path.exists(scanner_c):
             source_paths.append(scanner_c)
 
+        compiler.define_macro(
+            f"TS_LANGUAGE_{os.path.split(repo_path.rstrip('/'))[1].lstrip('tree-sitter-').replace('-', '_').upper()}",
+            "1",
+        )
+
     source_mtimes = [os.path.getmtime(__file__)] + [
         os.path.getmtime(path) for path in source_paths
     ]
 
-    compiler = distutils.ccompiler.new_compiler()
     if cpp:
         if ctypes.util.find_library("stdc++"):
             compiler.add_library("stdc++")
@@ -69,6 +74,10 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
                 include_dirs.append(
                     os.path.join(os.environ["JAVA_HOME"], "include", "linux")
                 )
+            elif platform.system() == "Darwin":
+                include_dirs.append(
+                    os.path.join(os.environ["JAVA_HOME"], "include", "darwin")
+                )
 
             object_paths.append(
                 compiler.compile(
@@ -96,4 +105,5 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
+    # distutils.log.set_verbosity(1)
     build(sys.argv[2:], sys.argv[1])
