@@ -4,6 +4,13 @@
 #include <string.h>
 #include <tree_sitter/api.h>
 
+struct TreeCursorNode {
+  const char* type;
+  const char* name;
+  int startByte;
+  int endByte;
+};
+
 static jint JNI_VERSION = JNI_VERSION_10;
 
 static jclass _nodeClass;
@@ -14,11 +21,11 @@ static jfieldID _nodeContext3Field;
 static jfieldID _nodeIdField;
 static jfieldID _nodeTreeField;
 
-static jclass _treeCursorClass;
-static jfieldID _treeCursorContext0Field;
-static jfieldID _treeCursorContext1Field;
-static jfieldID _treeCursorIdField;
-static jfieldID _treeCursorTreeField;
+static jclass _treeCursorNodeClass;
+static jfieldID _treeCursorNodeTypeField;
+static jfieldID _treeCursorNodeNameField;
+static jfieldID _treeCursorNodeStartByteField;
+static jfieldID _treeCursorNodeEndByteField;
 
 #define _loadClass(VARIABLE, NAME)             \
   {                                            \
@@ -45,11 +52,14 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   _loadField(_nodeIdField, _nodeClass, "id", "J");
   _loadField(_nodeTreeField, _nodeClass, "tree", "J");
 
-  _loadClass(_treeCursorClass, "ai/serenade/treesitter/TreeCursor");
-  _loadField(_treeCursorContext0Field, _treeCursorClass, "context0", "I");
-  _loadField(_treeCursorContext1Field, _treeCursorClass, "context1", "I");
-  _loadField(_treeCursorIdField, _treeCursorClass, "id", "J");
-  _loadField(_treeCursorTreeField, _treeCursorClass, "tree", "J");
+  _loadClass(_treeCursorNodeClass, "ai/serenade/treesitter/TreeCursorNode");
+  _loadField(_treeCursorNodeTypeField, _treeCursorNodeClass, "type",
+             "Ljava/lang/String;");
+  _loadField(_treeCursorNodeNameField, _treeCursorNodeClass, "name",
+             "Ljava/lang/String;");
+  _loadField(_treeCursorNodeStartByteField, _treeCursorNodeClass, "startByte",
+             "I");
+  _loadField(_treeCursorNodeEndByteField, _treeCursorNodeClass, "endByte", "I");
 
   return JNI_VERSION;
 }
@@ -59,7 +69,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved) {
   vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION);
 
   env->DeleteGlobalRef(_nodeClass);
-  env->DeleteGlobalRef(_treeCursorClass);
+  env->DeleteGlobalRef(_treeCursorNodeClass);
 }
 
 jobject _marshalNode(JNIEnv* env, TSNode node) {
@@ -85,30 +95,15 @@ TSNode _unmarshalNode(JNIEnv* env, jobject javaObject) {
       (const TSTree*)env->GetLongField(javaObject, _nodeTreeField)};
 }
 
-jobject _marshalTreeCursor(JNIEnv* env, TSTreeCursor cursor) {
-  jobject javaObject = env->AllocObject(_treeCursorClass);
-  env->SetIntField(javaObject, _treeCursorContext0Field, cursor.context[0]);
-  env->SetIntField(javaObject, _treeCursorContext1Field, cursor.context[1]);
-  env->SetLongField(javaObject, _treeCursorIdField, (jlong)cursor.id);
-  env->SetLongField(javaObject, _treeCursorTreeField, (jlong)cursor.tree);
+jobject _marshalTreeCursorNode(JNIEnv* env, TreeCursorNode node) {
+  jobject javaObject = env->AllocObject(_treeCursorNodeClass);
+  env->SetObjectField(javaObject, _treeCursorNodeTypeField,
+                      env->NewStringUTF(node.type));
+  env->SetObjectField(javaObject, _treeCursorNodeNameField,
+                      env->NewStringUTF(node.name));
+  env->SetIntField(javaObject, _treeCursorNodeStartByteField, node.startByte);
+  env->SetIntField(javaObject, _treeCursorNodeEndByteField, node.endByte);
   return javaObject;
-}
-
-TSTreeCursor _unmarshalTreeCursor(JNIEnv* env, jobject javaObject) {
-  return (TSTreeCursor){
-      (const void*)env->GetLongField(javaObject, _treeCursorTreeField),
-      (const void*)env->GetLongField(javaObject, _treeCursorIdField),
-      {
-          (uint32_t)env->GetIntField(javaObject, _treeCursorContext0Field),
-          (uint32_t)env->GetIntField(javaObject, _treeCursorContext1Field),
-      }};
-}
-
-void _updateTreeCursor(JNIEnv* env, jobject cursor, TSTreeCursor* treeCursor) {
-  env->SetIntField(cursor, _treeCursorContext0Field, treeCursor->context[0]);
-  env->SetIntField(cursor, _treeCursorContext1Field, treeCursor->context[1]);
-  env->SetLongField(cursor, _treeCursorIdField, (jlong)treeCursor->id);
-  env->SetLongField(cursor, _treeCursorTreeField, (jlong)treeCursor->tree);
 }
 
 JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChild(
@@ -175,16 +170,17 @@ Java_ai_serenade_treesitter_TreeSitter_parserParseString(JNIEnv* env,
   return result;
 }
 
-JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorNew(
+JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorNew(
     JNIEnv* env, jclass self, jobject node) {
-  return _marshalTreeCursor(env, ts_tree_cursor_new(_unmarshalNode(env, node)));
+  TSTreeCursor* cursor =
+      new TSTreeCursor(ts_tree_cursor_new(_unmarshalNode(env, node)));
+  return (jlong)cursor;
 }
 
 JNIEXPORT jstring JNICALL
 Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentFieldName(
-    JNIEnv* env, jclass self, jobject cursor) {
-  TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
-  const char* name = ts_tree_cursor_current_field_name(&treeCursor);
+    JNIEnv* env, jclass self, jlong cursor) {
+  const char* name = ts_tree_cursor_current_field_name((TSTreeCursor*)cursor);
   jstring result = env->NewStringUTF(name);
   return result;
 }
@@ -192,38 +188,45 @@ Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentFieldName(
 JNIEXPORT jobject JNICALL
 Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentNode(JNIEnv* env,
                                                              jclass self,
-                                                             jobject cursor) {
-  TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
-  TSNode current = ts_tree_cursor_current_node(&treeCursor);
-  return _marshalNode(env, ts_tree_cursor_current_node(&treeCursor));
+                                                             jlong cursor) {
+  return _marshalNode(env, ts_tree_cursor_current_node((TSTreeCursor*)cursor));
+}
+
+JNIEXPORT jobject JNICALL
+Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentTreeCursorNode(
+    JNIEnv* env, jclass self, jlong cursor) {
+  TSNode node = ts_tree_cursor_current_node((TSTreeCursor*)cursor);
+  return _marshalTreeCursorNode(
+      env,
+      (TreeCursorNode){ts_node_type(node),
+                       ts_tree_cursor_current_field_name((TSTreeCursor*)cursor),
+                       ts_node_start_byte(node), ts_node_end_byte(node)});
+}
+
+JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorDelete(
+    JNIEnv* env, jclass self, jlong cursor) {
+  delete (TSTreeCursor*)cursor;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoFirstChild(
-    JNIEnv* env, jclass self, jobject cursor) {
-  TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
-  bool result = ts_tree_cursor_goto_first_child(&treeCursor);
-  _updateTreeCursor(env, cursor, &treeCursor);
-  return (jboolean)result;
+Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoFirstChild(JNIEnv* env,
+                                                                jclass self,
+                                                                jlong cursor) {
+  return (jboolean)ts_tree_cursor_goto_first_child((TSTreeCursor*)cursor);
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoNextSibling(
-    JNIEnv* env, jclass self, jobject cursor) {
-  TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
-  bool result = ts_tree_cursor_goto_next_sibling(&treeCursor);
-  _updateTreeCursor(env, cursor, &treeCursor);
-  return (jboolean)result;
+Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoNextSibling(JNIEnv* env,
+                                                                 jclass self,
+                                                                 jlong cursor) {
+  return (jboolean)ts_tree_cursor_goto_next_sibling((TSTreeCursor*)cursor);
 }
 
 JNIEXPORT jboolean JNICALL
 Java_ai_serenade_treesitter_TreeSitter_treeCursorGotoParent(JNIEnv* env,
                                                             jclass self,
-                                                            jobject cursor) {
-  TSTreeCursor treeCursor = _unmarshalTreeCursor(env, cursor);
-  bool result = ts_tree_cursor_goto_parent(&treeCursor);
-  _updateTreeCursor(env, cursor, &treeCursor);
-  return (jboolean)result;
+                                                            jlong cursor) {
+  return (jboolean)ts_tree_cursor_goto_parent((TSTreeCursor*)cursor);
 }
 
 JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeDelete(

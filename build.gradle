@@ -34,6 +34,10 @@ compileJava {
     options.compilerArgs += ["-h", "${project.projectDir.toString()}/lib"]
 }
 
+compileTestJava {
+    dependsOn buildSharedObject
+}
+
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
 }
@@ -47,8 +51,6 @@ publishing {
 }
 
 test {
-    dependsOn buildSharedObject
-
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

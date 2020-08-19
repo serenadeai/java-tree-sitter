@@ -1,30 +1,42 @@
 package ai.serenade.treesitter;
 
-public class TreeCursor {
+public class TreeCursor implements AutoCloseable {
+  private long pointer;
   private int context0;
   private int context1;
   private long id;
   private long tree;
 
-  public TreeCursor() {}
+  TreeCursor(long pointer) {
+    this.pointer = pointer;
+  }
+
+  @Override
+  public void close() {
+    TreeSitter.treeCursorDelete(pointer);
+  }
 
   public Node getCurrentNode() {
-    return TreeSitter.treeCursorCurrentNode(this);
+    return TreeSitter.treeCursorCurrentNode(pointer);
   }
 
   public String getCurrentFieldName() {
-    return TreeSitter.treeCursorCurrentFieldName(this);
+    return TreeSitter.treeCursorCurrentFieldName(pointer);
+  }
+
+  public TreeCursorNode getCurrentTreeCursorNode() {
+    return TreeSitter.treeCursorCurrentTreeCursorNode(pointer);
   }
 
   public boolean gotoFirstChild() {
-    return TreeSitter.treeCursorGotoFirstChild(this);
+    return TreeSitter.treeCursorGotoFirstChild(pointer);
   }
 
   public boolean gotoNextSibling() {
-    return TreeSitter.treeCursorGotoNextSibling(this);
+    return TreeSitter.treeCursorGotoNextSibling(pointer);
   }
 
   public boolean gotoParent() {
-    return TreeSitter.treeCursorGotoParent(this);
+    return TreeSitter.treeCursorGotoParent(pointer);
   }
 }

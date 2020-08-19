@@ -35,6 +35,6 @@ public class Node {
   }
 
   public TreeCursor walk() {
-    return TreeSitter.treeCursorNew(this);
+    return new TreeCursor(TreeSitter.treeCursorNew(this));
   }
 }

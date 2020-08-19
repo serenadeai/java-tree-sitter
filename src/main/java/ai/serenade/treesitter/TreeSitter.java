@@ -22,17 +22,21 @@ public class TreeSitter {
 
   public static native long parserParseString(long parser, String source, int length);
 
-  public static native TreeCursor treeCursorNew(Node node);
+  public static native long treeCursorNew(Node node);
 
-  public static native String treeCursorCurrentFieldName(TreeCursor cursor);
+  public static native TreeCursorNode treeCursorCurrentTreeCursorNode(long cursor);
 
-  public static native Node treeCursorCurrentNode(TreeCursor cursor);
+  public static native String treeCursorCurrentFieldName(long cursor);
 
-  public static native boolean treeCursorGotoFirstChild(TreeCursor cursor);
+  public static native Node treeCursorCurrentNode(long cursor);
 
-  public static native boolean treeCursorGotoNextSibling(TreeCursor cursor);
+  public static native void treeCursorDelete(long cursor);
 
-  public static native boolean treeCursorGotoParent(TreeCursor cursor);
+  public static native boolean treeCursorGotoFirstChild(long cursor);
+
+  public static native boolean treeCursorGotoNextSibling(long cursor);
+
+  public static native boolean treeCursorGotoParent(long cursor);
 
   public static native void treeDelete(long tree);
 
