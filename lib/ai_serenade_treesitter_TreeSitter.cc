@@ -7,8 +7,8 @@
 struct TreeCursorNode {
   const char* type;
   const char* name;
-  int startByte;
-  int endByte;
+  uint32_t startByte;
+  uint32_t endByte;
 };
 
 static jint JNI_VERSION = JNI_VERSION_10;
