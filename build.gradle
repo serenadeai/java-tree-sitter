@@ -1,6 +1,7 @@
 plugins {
     id "java-library"
     id "maven-publish"
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 group = "ai.serenade"
@@ -10,7 +11,6 @@ repositories {
     mavenLocal()
     mavenCentral()
 }
-
 
 task buildSharedObject {
     inputs.file "lib/ai_serenade_treesitter_Languages.cc"
@@ -46,6 +46,22 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
+        }
+    }
+}
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+    publications = ['maven']
+    pkg {
+        repo = "maven"
+        name = "java-tree-sitter"
+        userOrg = "serenadeai"
+        licenses = ["MIT"]
+        vcsUrl = "https://github.com/serenadeai/java-tree-sitter"
+        version {
+            name = project.getVersion()
         }
     }
 }
