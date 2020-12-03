@@ -9,10 +9,11 @@ import tempfile
 
 
 # adapted from https://github.com/tree-sitter/py-tree-sitter
-def build(repo_paths, output_path="libjava-tree-sitter.so"):
+def build(repo_paths, output_path="libjava-tree-sitter"):
     if not repo_paths:
         raise ValueError("Must provide at least one language folder")
 
+    output_path = f"{output_path}.{'dylib' if platform.system() == 'Darwin' else 'so'}"
     here = os.path.dirname(os.path.realpath(__file__))
     os.system(f"make -C {os.path.join(here, 'tree-sitter')} > /dev/null")
 
@@ -58,7 +59,7 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
         for source_path in source_paths:
             flags = ["-O3"]
 
-            if platform.system() != "Windows":
+            if platform.system() == "Linux":
                 flags.append("-fPIC")
 
             if source_path.endswith(".c"):
@@ -88,9 +89,14 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
                 )[0]
             )
 
+        extra_preargs = []
+        if platform.system() == "Darwin":
+            extra_preargs = ["-dynamiclib"]
+
         compiler.link_shared_object(
             object_paths,
             output_path,
+            extra_preargs=extra_preargs,
             extra_postargs=[os.path.join(here, "tree-sitter", "libtree-sitter.a")],
             library_dirs=[os.path.join(here, "tree-sitter")],
         )
@@ -101,7 +107,7 @@ def build(repo_paths, output_path="libjava-tree-sitter.so"):
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print(
-            "Usage: build.py libjava-tree-sitter.so ./tree-sitter-python ./tree-sitter-javascript"
+            "Usage: build.py libjava-tree-sitter ./tree-sitter-python ./tree-sitter-javascript"
         )
         sys.exit(1)
 
