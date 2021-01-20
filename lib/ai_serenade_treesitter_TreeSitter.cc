@@ -161,7 +161,6 @@ JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_parserParseBytes(
     JNIEnv* env, jclass self, jlong parser, jbyteArray source_bytes,
     jint length) {
   jbyte* source = env->GetByteArrayElements(source_bytes, NULL);
-  jsize size = env->GetArrayLength(source_bytes);
   jlong result = (jlong)ts_parser_parse_string(
       (TSParser*)parser, NULL, reinterpret_cast<const char*>(source), length);
   env->ReleaseByteArrayElements(source_bytes, source, JNI_ABORT);
