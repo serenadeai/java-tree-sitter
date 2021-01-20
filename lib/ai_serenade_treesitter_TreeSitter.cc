@@ -127,12 +127,12 @@ JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeString(
 
 JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeEndByte(
     JNIEnv* env, jclass self, jobject node) {
-  return (jint)ts_node_end_byte(_unmarshalNode(env, node));
+  return (jint)ts_node_end_byte(_unmarshalNode(env, node)) / 2;
 }
 
 JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeStartByte(
     JNIEnv* env, jclass self, jobject node) {
-  return (jint)ts_node_start_byte(_unmarshalNode(env, node));
+  return (jint)ts_node_start_byte(_unmarshalNode(env, node)) / 2;
 }
 
 JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeType(
@@ -161,8 +161,8 @@ JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_parserParseBytes(
     JNIEnv* env, jclass self, jlong parser, jbyteArray source_bytes,
     jint length) {
   jbyte* source = env->GetByteArrayElements(source_bytes, NULL);
-  jlong result = (jlong)ts_parser_parse_string(
-      (TSParser*)parser, NULL, reinterpret_cast<const char*>(source), length);
+  jlong result = (jlong)ts_parser_parse_string_encoding(
+      (TSParser*)parser, NULL, reinterpret_cast<const char*>(source), length, TSInputEncodingUTF16);
   env->ReleaseByteArrayElements(source_bytes, source, JNI_ABORT);
   return result;
 }
@@ -197,7 +197,7 @@ Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentTreeCursorNode(
       env,
       (TreeCursorNode){ts_node_type(node),
                        ts_tree_cursor_current_field_name((TSTreeCursor*)cursor),
-                       ts_node_start_byte(node), ts_node_end_byte(node)});
+                       ts_node_start_byte(node) / 2, ts_node_end_byte(node) / 2});
 }
 
 JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorDelete(
