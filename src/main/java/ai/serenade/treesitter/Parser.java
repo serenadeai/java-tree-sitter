@@ -1,5 +1,8 @@
 package ai.serenade.treesitter;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 public class Parser implements AutoCloseable {
   private long pointer;
 
@@ -15,8 +18,9 @@ public class Parser implements AutoCloseable {
     TreeSitter.parserSetLanguage(pointer, language);
   }
 
-  public Tree parseString(String source) {
-    return new Tree(TreeSitter.parserParseString(pointer, source, source.length()));
+  public Tree parseString(String source) throws UnsupportedEncodingException {
+    byte[] bytes = source.getBytes(StandardCharsets.UTF_8);
+    return new Tree(TreeSitter.parserParseBytes(pointer, bytes, bytes.length));
   }
 
   @Override

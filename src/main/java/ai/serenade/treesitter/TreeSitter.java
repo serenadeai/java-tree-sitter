@@ -20,7 +20,7 @@ public class TreeSitter {
 
   public static native void parserSetLanguage(long parser, long language);
 
-  public static native long parserParseString(long parser, String source, int length);
+  public static native long parserParseBytes(long parser, byte[] source, int length);
 
   public static native long treeCursorNew(Node node);
 

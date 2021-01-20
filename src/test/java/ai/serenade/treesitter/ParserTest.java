@@ -2,12 +2,13 @@ package ai.serenade.treesitter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.Test;
 
 public class ParserTest extends TestBase {
 
   @Test
-  void testParse() {
+  void testParse() throws UnsupportedEncodingException {
     try (Parser parser = new Parser()) {
       parser.setLanguage(Languages.python());
       try (Tree tree = parser.parseString("print(\"hi\")")) {

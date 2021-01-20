@@ -81,11 +81,11 @@ JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_parserSetLanguage
 
 /*
  * Class:     ai_serenade_treesitter_TreeSitter
- * Method:    parserParseString
- * Signature: (JLjava/lang/String;I)J
+ * Method:    parserParseBytes
+ * Signature: (J[BI)J
  */
-JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_parserParseString
-  (JNIEnv *, jclass, jlong, jstring, jint);
+JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_parserParseBytes
+  (JNIEnv *, jclass, jlong, jbyteArray, jint);
 
 /*
  * Class:     ai_serenade_treesitter_TreeSitter

@@ -157,16 +157,14 @@ JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_parserSetLanguage(
   ts_parser_set_language((TSParser*)parser, (TSLanguage*)language);
 }
 
-JNIEXPORT jlong JNICALL
-Java_ai_serenade_treesitter_TreeSitter_parserParseString(JNIEnv* env,
-                                                         jclass self,
-                                                         jlong parser,
-                                                         jstring source_string,
-                                                         jint length) {
-  const char* source = env->GetStringUTFChars(source_string, 0);
-  jlong result =
-      (jlong)ts_parser_parse_string((TSParser*)parser, NULL, source, length);
-  env->ReleaseStringUTFChars(source_string, source);
+JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_parserParseBytes(
+    JNIEnv* env, jclass self, jlong parser, jbyteArray source_bytes,
+    jint length) {
+  jbyte* source = env->GetByteArrayElements(source_bytes, NULL);
+  jsize size = env->GetArrayLength(source_bytes);
+  jlong result = (jlong)ts_parser_parse_string(
+      (TSParser*)parser, NULL, reinterpret_cast<const char*>(source), length);
+  env->ReleaseByteArrayElements(source_bytes, source, JNI_ABORT);
   return result;
 }
 

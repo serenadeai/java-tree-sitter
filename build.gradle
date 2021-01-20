@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "ai.serenade"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenLocal()
@@ -21,7 +21,7 @@ task buildSharedObject {
 
     doLast {
         exec {
-            commandLine "./build.py", "libjava-tree-sitter.so", "src/test/tree-sitter-python"
+            commandLine "./build.py", "libjava-tree-sitter", "src/test/tree-sitter-python"
         }
     }
 }
