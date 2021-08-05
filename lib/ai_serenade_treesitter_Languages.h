@@ -33,10 +33,10 @@ JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_c
 
 /*
  * Class:     ai_serenade_treesitter_Languages
- * Method:    c_sharp
+ * Method:    cSharp
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_c_1sharp
+JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_cSharp
   (JNIEnv *, jclass);
 
 /*
