@@ -8,7 +8,7 @@ public class Languages {
 
   public static native long c();
 
-  public static native long c_sharp();
+  public static native long cSharp();
 
   public static native long cpp();
 

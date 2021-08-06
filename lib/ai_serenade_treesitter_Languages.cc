@@ -30,7 +30,7 @@ JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_Languages_c(JNIEnv* env,
 #ifdef TS_LANGUAGE_C_SHARP
 extern "C" TSLanguage* tree_sitter_c_sharp();
 JNIEXPORT jlong JNICALL
-Java_ai_serenade_treesitter_Languages_c_sharp(JNIEnv* env, jclass self) {
+Java_ai_serenade_treesitter_Languages_cSharp(JNIEnv* env, jclass self) {
   return (jlong)tree_sitter_c_sharp();
 }
 #endif
