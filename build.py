@@ -111,5 +111,5 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    distutils.log.set_verbosity(1)
+    distutils.log.set_verbosity(0)
     build(sys.argv[2:], sys.argv[1])
