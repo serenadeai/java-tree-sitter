@@ -30,8 +30,55 @@ public class Node {
     return TreeSitter.nodeStartByte(this);
   }
 
+  public Range getRange() {
+    Point start = TreeSitter.nodeStartPoint(this);
+    Point end = TreeSitter.nodeEndPoint(this);
+    return new Range(
+            start.row,
+            start.column,
+            end.row,
+            end.column
+    );
+  }
+
+  public boolean hasParent() {
+    return TreeSitter.nodeHasParent(this);
+  }
+
+  public boolean hasNextSibling() {
+    return TreeSitter.nodeHasNextSibling(this);
+  }
+
+  public boolean hasPrevSibling() {
+    return TreeSitter.nodeHasPrevSibling(this);
+  }
+
+  public Node getParent() {
+    return TreeSitter.nodeParent(this);
+  }
+
+  public Node getNextSibling() {
+    return TreeSitter.nodeNextSibling(this);
+  }
+
+  public Node getPrevSibling() {
+    return TreeSitter.nodePrevSibling(this);
+  }
+
+  public String getFieldName() {
+    return TreeSitter.nodeGetFieldName(this);
+  }
+
   public String getType() {
     return TreeSitter.nodeType(this);
+  }
+
+  public boolean isNull() {
+    return TreeSitter.nodeIsNull(this);
+  }
+
+  public boolean isNamed() {
+    return TreeSitter.nodeIsNamed(this);
   }
 
   public TreeCursor walk() {

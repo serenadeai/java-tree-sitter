@@ -9,6 +9,8 @@ struct TreeCursorNode {
   const char* name;
   uint32_t startByte;
   uint32_t endByte;
+  TSPoint startPoint;
+  TSPoint endPoint;
 };
 
 static jint JNI_VERSION = JNI_VERSION_10;
@@ -26,6 +28,12 @@ static jfieldID _treeCursorNodeTypeField;
 static jfieldID _treeCursorNodeNameField;
 static jfieldID _treeCursorNodeStartByteField;
 static jfieldID _treeCursorNodeEndByteField;
+static jfieldID _treeCursorNodeStartPointField;
+static jfieldID _treeCursorNodeEndPointField;
+
+static jclass _pointClass;
+static jfieldID _pointColField;
+static jfieldID _pointRowField;
 
 #define _loadClass(VARIABLE, NAME)             \
   {                                            \
@@ -52,6 +60,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   _loadField(_nodeIdField, _nodeClass, "id", "J");
   _loadField(_nodeTreeField, _nodeClass, "tree", "J");
 
+  _loadClass(_pointClass, "ai/serenade/treesitter/Point");
+  _loadField(_pointColField, _pointClass, "column", "I");
+  _loadField(_pointRowField, _pointClass, "row", "I");
+
   _loadClass(_treeCursorNodeClass, "ai/serenade/treesitter/TreeCursorNode");
   _loadField(_treeCursorNodeTypeField, _treeCursorNodeClass, "type",
              "Ljava/lang/String;");
@@ -60,6 +72,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   _loadField(_treeCursorNodeStartByteField, _treeCursorNodeClass, "startByte",
              "I");
   _loadField(_treeCursorNodeEndByteField, _treeCursorNodeClass, "endByte", "I");
+  _loadField(_treeCursorNodeStartPointField, _treeCursorNodeClass, "startPoint",
+             "Lai/serenade/treesitter/Point;");
+  _loadField(_treeCursorNodeEndPointField, _treeCursorNodeClass, "endPoint",
+             "Lai/serenade/treesitter/Point;");
 
   return JNI_VERSION;
 }
@@ -70,6 +86,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved) {
 
   env->DeleteGlobalRef(_nodeClass);
   env->DeleteGlobalRef(_treeCursorNodeClass);
+  env->DeleteGlobalRef(_pointClass);
 }
 
 jobject _marshalNode(JNIEnv* env, TSNode node) {
@@ -81,6 +98,13 @@ jobject _marshalNode(JNIEnv* env, TSNode node) {
   env->SetLongField(javaObject, _nodeIdField, (jlong)node.id);
   env->SetLongField(javaObject, _nodeTreeField, (jlong)node.tree);
   return javaObject;
+}
+
+jobject _marshalPoint(JNIEnv *env, TSPoint point) {
+    jobject javaObject = env->AllocObject(_pointClass);
+    env->SetIntField(javaObject, _pointRowField, point.row);
+    env->SetIntField(javaObject, _pointColField, point.column);
+    return javaObject;
 }
 
 TSNode _unmarshalNode(JNIEnv* env, jobject javaObject) {
@@ -103,6 +127,8 @@ jobject _marshalTreeCursorNode(JNIEnv* env, TreeCursorNode node) {
                       env->NewStringUTF(node.name));
   env->SetIntField(javaObject, _treeCursorNodeStartByteField, node.startByte);
   env->SetIntField(javaObject, _treeCursorNodeEndByteField, node.endByte);
+  env->SetObjectField(javaObject, _treeCursorNodeStartPointField, _marshalPoint(env, node.startPoint));
+  env->SetObjectField(javaObject, _treeCursorNodeEndPointField, _marshalPoint(env, node.endPoint));
   return javaObject;
 }
 
@@ -140,6 +166,59 @@ JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeType(
   const char* type = ts_node_type(_unmarshalNode(env, node));
   jstring result = env->NewStringUTF(type);
   return result;
+}
+
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeIsNull
+  (JNIEnv *env, jclass self, jobject node) {
+    return (jboolean) ts_node_is_null(_unmarshalNode(env, node));
+}
+
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeIsNamed
+  (JNIEnv *env, jclass self, jobject node) {
+    return (jboolean) ts_node_is_named(_unmarshalNode(env, node));
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeParent
+  (JNIEnv *env, jclass self, jobject node) {
+    return _marshalNode(env, ts_node_parent(_unmarshalNode(env, node)));
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodePrevSibling
+  (JNIEnv *env, jclass self, jobject node) {
+    return _marshalNode(env, ts_node_prev_sibling(_unmarshalNode(env, node)));
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeNextSibling
+  (JNIEnv *env, jclass self, jobject node) {
+    return _marshalNode(env, ts_node_next_sibling(_unmarshalNode(env, node)));
+}
+
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasParent
+  (JNIEnv *env, jclass self, jobject node) {
+    TSNode parent = ts_node_parent(_unmarshalNode(env, node));
+    return (jboolean) ts_node_is_null(parent) == false;
+}
+
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasNextSibling
+  (JNIEnv *env, jclass self, jobject node) {
+    TSNode sibling = ts_node_next_sibling(_unmarshalNode(env, node));
+    return (jboolean) ts_node_is_null(sibling) == false;
+}
+
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasPrevSibling
+  (JNIEnv *env, jclass self, jobject node) {
+    TSNode sibling = ts_node_prev_sibling(_unmarshalNode(env, node));
+    return (jboolean) ts_node_is_null(sibling) == false;
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeStartPoint
+   (JNIEnv *env, jclass self, jobject node) {
+   return _marshalPoint(env, ts_node_start_point(_unmarshalNode(env, node)));
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeEndPoint
+   (JNIEnv *env, jclass self, jobject node) {
+   return _marshalPoint(env, ts_node_end_point(_unmarshalNode(env, node)));
 }
 
 JNIEXPORT jlong JNICALL
@@ -197,7 +276,9 @@ Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentTreeCursorNode(
       env,
       (TreeCursorNode){ts_node_type(node),
                        ts_tree_cursor_current_field_name((TSTreeCursor*)cursor),
-                       ts_node_start_byte(node) / 2, ts_node_end_byte(node) / 2});
+                       ts_node_start_byte(node) / 2, ts_node_end_byte(node) / 2,
+                       ts_node_start_point(node), ts_node_end_point(node)
+                       });
 }
 
 JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorDelete(
