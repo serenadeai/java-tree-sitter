@@ -2,6 +2,19 @@
 
 Java bindings for [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
 
+## Preparing
+
+Recursively clone the project with submodules:
+
+    git clone https://github.com/serenadeai/java-tree-sitter.git --recursive
+    
+Or clone first and update the submodules then:
+   
+    git clone https://github.com/serenadeai/java-tree-sitter.git
+    git submodule update --init --recursive  
+    # or:  git submodule init && git submodule update
+
+
 ## Building
 
 Before you can start using java-tree-sitter, you need to build a shared library that Java can load. The included `build.py` script can facilitate building the library. The first argument is the output file, followed by all of the tree-sitter repositories that you want to be included:
