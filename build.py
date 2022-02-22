@@ -15,10 +15,10 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
     here = os.path.dirname(os.path.realpath(__file__))
     env = f"CFLAGS='-arch {arch}' LDFLAGS='-arch {arch}'" if arch else ""
     os.system(
-        f"make -C {os.path.join(here, 'tree-sitter')} clean {'&> /dev/null' if not verbose else ''}"
+        f"make -C {os.path.join(here, 'tree-sitter')} clean {'> /dev/null' if not verbose else ''}"
     )
     os.system(
-        f"{env} make -C {os.path.join(here, 'tree-sitter')} {'&> /dev/null' if not verbose else ''}"
+        f"{env} make -C {os.path.join(here, 'tree-sitter')} {'> /dev/null' if not verbose else ''}"
     )
 
     cpp = False
