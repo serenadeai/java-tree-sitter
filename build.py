@@ -11,9 +11,19 @@ import tempfile
 
 # adapted from https://github.com/tree-sitter/py-tree-sitter
 def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=False):
+    if arch and platform.system() != "Darwin":
+        arch = "64" if "64" in arch else "32"
+
     output_path = f"{output_path}.{'dylib' if platform.system() == 'Darwin' else 'so'}"
     here = os.path.dirname(os.path.realpath(__file__))
-    env = f"CFLAGS='-arch {arch}' LDFLAGS='-arch {arch}'" if arch else ""
+    env = ""
+    if arch:
+        env += (
+            f"CFLAGS='-arch {arch}' LDFLAGS='-arch {arch}'"
+            if platform.system() == "Darwin"
+            else f"CFLAGS='-m{arch}' LDFLAGS='-m{arch}'"
+        )
+
     os.system(
         f"make -C {os.path.join(here, 'tree-sitter')} clean {'> /dev/null' if not verbose else ''}"
     )
@@ -70,7 +80,9 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
                 flags.append("-std=c99")
 
             if arch:
-                flags += ["-arch", arch]
+                flags += (
+                    ["-arch", arch] if platform.system() == "Darwin" else [f"-m{arch}"]
+                )
 
             include_dirs = [
                 os.path.dirname(source_path),
@@ -101,7 +113,9 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
             extra_preargs.append("-dynamiclib")
 
         if arch:
-            extra_preargs += ["-arch", arch]
+            extra_preargs += (
+                ["-arch", arch] if platform.system() == "Darwin" else [f"-m{arch}"]
+            )
 
         compiler.link_shared_object(
             object_paths,
@@ -119,7 +133,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-a",
         "--arch",
-        help="Architecture to build for",
+        help="Architecture to build for (x86, x86_64, arm64)",
     )
     parser.add_argument(
         "-o", "--output", default="libjava-tree-sitter", help="Output file name"
