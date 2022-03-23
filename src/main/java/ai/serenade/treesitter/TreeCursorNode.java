@@ -1,16 +1,22 @@
 package ai.serenade.treesitter;
 
 public class TreeCursorNode {
-  private String type;
-  private String name;
-  private int startByte;
-  private int endByte;
+  private final String type;
+  private final String name;
+  private final int startByte;
+  private final int endByte;
 
-  public TreeCursorNode(String type, String name, int startByte, int endByte) {
+  private final Point startPoint;
+
+  private final Point endPoint;
+
+  public TreeCursorNode(String type, String name, int startByte, int endByte, Point startPoint, Point endPoint) {
     this.type = type;
     this.name = name;
     this.startByte = startByte;
     this.endByte = endByte;
+    this.startPoint = startPoint;
+    this.endPoint = endPoint;
   }
 
   public String getType() {
@@ -27,5 +33,17 @@ public class TreeCursorNode {
 
   public int getEndByte() {
     return endByte;
+  }
+
+  public Point getStartPoint() {
+    return startPoint;
+  }
+
+  public Point getEndPoint() {
+    return endPoint;
+  }
+
+  public Range getRange() {
+    return new Range(startPoint, endPoint);
   }
 }

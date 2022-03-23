@@ -41,6 +41,22 @@ JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeStartByte
 
 /*
  * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeStartPoint
+ * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/Point;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeStartPoint
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeEndPoint
+ * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/Point;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeEndPoint
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
  * Method:    nodeString
  * Signature: (Lai/serenade/treesitter/Node;)Ljava/lang/String;
  */
@@ -53,6 +69,78 @@ JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeString
  * Signature: (Lai/serenade/treesitter/Node;)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeType
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeIsNull
+ * Signature: (Lai/serenade/treesitter/Node;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeIsNull
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeIsNamed
+ * Signature: (Lai/serenade/treesitter/Node;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeIsNamed
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodePrevSibling
+ * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/Node;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodePrevSibling
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeNextSibling
+ * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/Node;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeNextSibling
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeParent
+ * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/Node;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeParent
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeHasParent
+ * Signature: (Lai/serenade/treesitter/Node;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasParent
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeHasPrevSibling
+ * Signature: (Lai/serenade/treesitter/Node;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasPrevSibling
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeHasNextSibling
+ * Signature: (Lai/serenade/treesitter/Node;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasNextSibling
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeGetFieldName
+ * Signature: (Lai/serenade/treesitter/Node;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeGetFieldName
   (JNIEnv *, jclass, jobject);
 
 /*

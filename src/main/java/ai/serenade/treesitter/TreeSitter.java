@@ -10,9 +10,31 @@ public class TreeSitter {
 
   public static native int nodeStartByte(Node node);
 
+  public static native Point nodeStartPoint(Node node);
+
+  public static native Point nodeEndPoint(Node node);
+
   public static native String nodeString(Node node);
 
   public static native String nodeType(Node node);
+
+  public static native boolean nodeIsNull(Node node);
+
+  public static native boolean nodeIsNamed(Node node);
+
+  public static native Node nodePrevSibling(Node node);
+
+  public static native Node nodeNextSibling(Node node);
+
+  public static native Node nodeParent(Node node);
+
+  public static native boolean nodeHasParent(Node node);
+
+  public static native boolean nodeHasPrevSibling(Node node);
+
+  public static native boolean nodeHasNextSibling(Node node);
+
+  public static native String nodeGetFieldName(Node node);
 
   public static native long parserNew();
 

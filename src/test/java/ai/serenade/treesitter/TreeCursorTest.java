@@ -10,30 +10,39 @@ public class TreeCursorTest extends TestBase {
   @Test
   void testWalk() throws UnsupportedEncodingException {
     try (Parser parser = new Parser()) {
-      parser.setLanguage(Languages.python());
-      try (Tree tree = parser.parseString("def foo(bar, baz):\n  print(bar)\n  print(baz)")) {
+      parser.setLanguage(Languages.java());
+      try (Tree tree = parser.parseString("public class Thing { /** abc \n *\n */\npublic static void main() { System.out.println('a'); } }")) {
         try (TreeCursor cursor = tree.getRootNode().walk()) {
-          assertEquals("module", cursor.getCurrentTreeCursorNode().getType());
-          assertEquals("module", cursor.getCurrentNode().getType());
-          assertEquals(true, cursor.gotoFirstChild());
-          assertEquals("function_definition", cursor.getCurrentNode().getType());
-          assertEquals(true, cursor.gotoFirstChild());
 
-          assertEquals("def", cursor.getCurrentNode().getType());
+          for (TreeCursor it = cursor; it.hasNext(); ) {
+            TreeCursorNode n = it.next();
+
+            System.out.println(n.getType() + " " + n.getName() + " " + n.getRange());
+
+          }
+          assertEquals("program", cursor.getCurrentTreeCursorNode().getType());
+          assertEquals("program", cursor.getCurrentNode().getType());
+          assertEquals(true, cursor.gotoFirstChild());
+          assertEquals("class_declaration", cursor.getCurrentNode().getType());
+          assertEquals(true, cursor.gotoFirstChild());
+          assertEquals("modifiers", cursor.getCurrentNode().getType());
+          assertEquals(true, cursor.gotoNextSibling());
+          assertEquals("class", cursor.getCurrentNode().getType());
           assertEquals(true, cursor.gotoNextSibling());
           assertEquals("identifier", cursor.getCurrentNode().getType());
           assertEquals(true, cursor.gotoNextSibling());
-          assertEquals("parameters", cursor.getCurrentNode().getType());
-          assertEquals(true, cursor.gotoNextSibling());
-          assertEquals(":", cursor.getCurrentNode().getType());
-          assertEquals(true, cursor.gotoNextSibling());
-          assertEquals("block", cursor.getCurrentNode().getType());
-          assertEquals("body", cursor.getCurrentFieldName());
-          assertEquals(false, cursor.gotoNextSibling());
-
-          assertEquals(true, cursor.gotoParent());
-          assertEquals("function_definition", cursor.getCurrentNode().getType());
+          assertEquals("class_body", cursor.getCurrentNode().getType());
           assertEquals(true, cursor.gotoFirstChild());
+          assertEquals("{", cursor.getCurrentNode().getType());
+          System.out.println(cursor.getCurrentNode().getNodeString());
+          assertEquals(true, cursor.gotoNextSibling());
+          assertEquals("comment", cursor.getCurrentNode().getType());
+          assertEquals(true, cursor.gotoNextSibling());
+          assertEquals("method_declaration", cursor.getCurrentNode().getType());
+          assertEquals(true, cursor.gotoNextSibling());
+          assertEquals("}", cursor.getCurrentNode().getType());
+//          assertEquals("function_definition", cursor.getCurrentNode().getType());
+//          assertEquals(true, cursor.gotoFirstChild());
         }
       }
     }

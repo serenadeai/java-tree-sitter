@@ -1,7 +1,5 @@
 plugins {
     id "java-library"
-    id "maven-publish"
-    id "com.jfrog.bintray" version "1.8.5"
 }
 
 group = "ai.serenade"
@@ -21,7 +19,8 @@ task buildSharedObject {
 
     doLast {
         exec {
-            commandLine "./build.py", "libjava-tree-sitter", "src/test/tree-sitter-python"
+            environment "JAVA_HOME", "/usr/lib/jvm/java-11-openjdk-amd64"
+            commandLine "./build.py", "libjava-tree-sitter", "tree-sitter-java"
         }
     }
 }
@@ -40,30 +39,6 @@ compileTestJava {
 
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
-        }
-    }
-}
-
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_KEY")
-    publications = ['maven']
-    pkg {
-        repo = "maven"
-        name = "java-tree-sitter"
-        userOrg = "serenadeai"
-        licenses = ["MIT"]
-        vcsUrl = "https://github.com/serenadeai/java-tree-sitter"
-        version {
-            name = project.getVersion()
-        }
-    }
 }
 
 test {
