@@ -4,3 +4,4 @@ build
 *.so
 *.dylib
 *.log
+/gradle.properties
