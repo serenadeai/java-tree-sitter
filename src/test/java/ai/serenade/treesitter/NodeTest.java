@@ -1,6 +1,8 @@
 package ai.serenade.treesitter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ public class NodeTest extends TestBase {
         Node function = root.getChild(0);
         assertEquals("class_declaration", function.getType());
         assertEquals(4, function.getChildCount());
+        assertTrue(function.isNamed());
+        assertFalse(function.isNull());
       }
     }
   }

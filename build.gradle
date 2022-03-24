@@ -20,7 +20,25 @@ task buildSharedObject {
     doLast {
         exec {
             environment "JAVA_HOME", "/usr/lib/jvm/java-11-openjdk-amd64"
-            commandLine "./build.py", "libjava-tree-sitter", "tree-sitter-java"
+            commandLine "./build.py", "tree-sitter-java"
+        }
+    }
+}
+
+task buildFinalLib {
+    dependsOn jar
+    dependsOn clean
+
+    inputs.file "lib/ai_serenade_treesitter_Languages.cc"
+    inputs.file "lib/ai_serenade_treesitter_Languages.h"
+    inputs.file "lib/ai_serenade_treesitter_TreeSitter.cc"
+    inputs.file "lib/ai_serenade_treesitter_TreeSitter.h"
+
+    doLast {
+        exec {
+            environment "JAVA_HOME", "/usr/lib/jvm/java-11-openjdk-amd64"
+            commandLine "./build.py", "tree-sitter-js", "tree-sitter-java", "tree-sitter-cpp",
+                    "tree-sitter-ts/typescript", "tree-sitter-py", "tree-sitter-c", "-o", "build/libs/libjava-tree-sitter"
         }
     }
 }
@@ -49,3 +67,4 @@ test {
 
     environment "JAVA_TREE_SITTER", "${project.projectDir.toString()}/libjava-tree-sitter.so"
 }
+

@@ -36,7 +36,7 @@ public class TreeCursorTest extends TestBase {
           assertEquals("{", cursor.getCurrentNode().getType());
           System.out.println(cursor.getCurrentNode().getNodeString());
           assertEquals(true, cursor.gotoNextSibling());
-          assertEquals("comment", cursor.getCurrentNode().getType());
+          assertEquals("block_comment", cursor.getCurrentNode().getType());
           assertEquals(true, cursor.gotoNextSibling());
           assertEquals("method_declaration", cursor.getCurrentNode().getType());
           assertEquals(true, cursor.gotoNextSibling());
