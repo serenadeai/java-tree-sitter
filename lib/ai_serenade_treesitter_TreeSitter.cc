@@ -108,15 +108,16 @@ jobject _marshalPoint(JNIEnv *env, TSPoint point) {
 }
 
 TSNode _unmarshalNode(JNIEnv* env, jobject javaObject) {
-  return (TSNode){
-      {
-          (uint32_t)env->GetIntField(javaObject, _nodeContext0Field),
-          (uint32_t)env->GetIntField(javaObject, _nodeContext1Field),
-          (uint32_t)env->GetIntField(javaObject, _nodeContext2Field),
-          (uint32_t)env->GetIntField(javaObject, _nodeContext3Field),
-      },
-      (const void*)env->GetLongField(javaObject, _nodeIdField),
-      (const TSTree*)env->GetLongField(javaObject, _nodeTreeField)};
+	TSNode node = {
+		{
+			(uint32_t)env->GetIntField(javaObject, _nodeContext0Field),
+			(uint32_t)env->GetIntField(javaObject, _nodeContext1Field),
+			(uint32_t)env->GetIntField(javaObject, _nodeContext2Field),
+			(uint32_t)env->GetIntField(javaObject, _nodeContext3Field),
+		},
+		(const void*)env->GetLongField(javaObject, _nodeIdField),
+		(const TSTree*)env->GetLongField(javaObject, _nodeTreeField) };
+  return node;
 }
 
 jobject _marshalTreeCursorNode(JNIEnv* env, TreeCursorNode node) {
@@ -272,13 +273,13 @@ JNIEXPORT jobject JNICALL
 Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentTreeCursorNode(
     JNIEnv* env, jclass self, jlong cursor) {
   TSNode node = ts_tree_cursor_current_node((TSTreeCursor*)cursor);
+  TreeCursorNode treeCursorNode = { ts_node_type(node),
+	  ts_tree_cursor_current_field_name((TSTreeCursor*)cursor),
+	  ts_node_start_byte(node) / 2, ts_node_end_byte(node) / 2,
+	  ts_node_start_point(node), ts_node_end_point(node)
+  };
   return _marshalTreeCursorNode(
-      env,
-      (TreeCursorNode){ts_node_type(node),
-                       ts_tree_cursor_current_field_name((TSTreeCursor*)cursor),
-                       ts_node_start_byte(node) / 2, ts_node_end_byte(node) / 2,
-                       ts_node_start_point(node), ts_node_end_point(node)
-                       });
+      env,treeCursorNode);
 }
 
 JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorDelete(
