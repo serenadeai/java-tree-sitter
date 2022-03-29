@@ -15,7 +15,7 @@
 	path = tree-sitter-py
 	url = https://github.com/tree-sitter/tree-sitter-python.git
 [submodule "tree-sitter-c"]
-	path = tree-sitter-c
+	path = tree-sitter-modules/tree-sitter-c
 	url = https://github.com/tree-sitter/tree-sitter-c.git
 [submodule "tree-sitter-cpp"]
 	path = tree-sitter-cpp
