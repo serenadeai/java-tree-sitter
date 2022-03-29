@@ -1,5 +1,5 @@
 [submodule "tree-sitter"]
-	path = tree-sitter
+	path = tree-sitter-modules/tree-sitter
 	url = https://github.com/tree-sitter/tree-sitter
 [submodule "tree-sitter-java"]
 	path = tree-sitter-java
