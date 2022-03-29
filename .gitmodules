@@ -6,7 +6,7 @@
 	url = https://github.com/tree-sitter/tree-sitter-java.git
 
 [submodule "tree-sitter-ts"]
-	path = tree-sitter-ts
+	path = tree-sitter-modules/tree-sitter-ts
 	url = https://github.com/tree-sitter/tree-sitter-typescript.git
 [submodule "tree-sitter-js"]
 	path = tree-sitter-modules/tree-sitter-js
