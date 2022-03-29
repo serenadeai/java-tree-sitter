@@ -6,3 +6,9 @@ build
 *.dylib
 *.log
 /gradle.properties
+/VS-prj/x64
+/VS-prj/.vs/
+/VS-prj/libjava-tree-sitter-vs-prj/x64
+/VS-prj/libjava-tree-sitter-vs-prj/tree-sitter-modules/
+/VS-prj/libjava-tree-sitter-vs-prj/lib/
+/VS-prj/tree-sitter-vs-lib/x64/
