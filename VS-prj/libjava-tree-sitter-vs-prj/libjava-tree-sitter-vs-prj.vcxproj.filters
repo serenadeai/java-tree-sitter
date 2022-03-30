@@ -21,7 +21,34 @@
     <ClCompile Include="..\..\lib\ai_serenade_treesitter_TreeSitter.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-ts\typescript\src\parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-ts\typescript\src\scanner.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-java\src\parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-c\src\parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-cpp\src\parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-cpp\src\scanner.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\scanner.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\scanner.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

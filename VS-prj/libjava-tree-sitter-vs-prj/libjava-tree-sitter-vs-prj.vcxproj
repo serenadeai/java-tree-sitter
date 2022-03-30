@@ -105,7 +105,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_DEBUG;_CONSOLE;TS_LANGUAGE_JAVA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_DEBUG;_CONSOLE;TS_LANGUAGE_JAVA;TS_LANGUAGE_C;TS_LANGUAGE_CPP;TS_LANGUAGE_JAVASCRIPT;TS_LANGUAGE_PYTHON;TS_LANGUAGE_TYPESCRIPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\lib;..\..\tree-sitter-modules\tree-sitter\lib\include;"%JAVA_HOME%\include";"%JAVA_HOME%\include\win32"</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
@@ -146,7 +146,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;_LIB;TS_LANGUAGE_JAVA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;_LIB;TS_LANGUAGE_JAVA;TS_LANGUAGE_C;TS_LANGUAGE_CPP;TS_LANGUAGE_JAVASCRIPT;TS_LANGUAGE_PYTHON;TS_LANGUAGE_TYPESCRIPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\lib;..\..\tree-sitter-modules\tree-sitter\lib\include;"%JAVA_HOME%\include";"%JAVA_HOME%\include\win32"</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
@@ -165,7 +165,16 @@
   <ItemGroup>
     <ClCompile Include="..\..\lib\ai_serenade_treesitter_Languages.cc" />
     <ClCompile Include="..\..\lib\ai_serenade_treesitter_TreeSitter.cc" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-c\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-cpp\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-cpp\src\scanner.cc" />
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-java\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\scanner.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\scanner.cc" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-ts\typescript\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-ts\typescript\src\scanner.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
