@@ -8,6 +8,7 @@ import platform
 import sys
 import tempfile
 
+tree_sitter_path = 'tree-sitter-modules/tree-sitter'
 
 # adapted from https://github.com/tree-sitter/py-tree-sitter
 def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=False):
@@ -25,10 +26,10 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
         )
 
     os.system(
-        f"make -C {os.path.join(here, 'tree-sitter')} clean {'> /dev/null' if not verbose else ''}"
+        f"make -C {os.path.join(here, tree_sitter_path)} clean {'> /dev/null' if not verbose else ''}"
     )
     os.system(
-        f"{env} make -C {os.path.join(here, 'tree-sitter')} {'> /dev/null' if not verbose else ''}"
+        f"{env} make -C {os.path.join(here, tree_sitter_path)} {'> /dev/null' if not verbose else ''}"
     )
 
     cpp = False
@@ -86,7 +87,7 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
 
             include_dirs = [
                 os.path.dirname(source_path),
-                os.path.join(here, "tree-sitter", "lib", "include"),
+                os.path.join(here, tree_sitter_path, "lib", "include"),
                 os.path.join(os.environ["JAVA_HOME"], "include"),
             ]
 
@@ -121,8 +122,8 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
             object_paths,
             output_path,
             extra_preargs=extra_preargs,
-            extra_postargs=[os.path.join(here, "tree-sitter", "libtree-sitter.a")],
-            library_dirs=[os.path.join(here, "tree-sitter")],
+            extra_postargs=[os.path.join(here, tree_sitter_path, "libtree-sitter.a")],
+            library_dirs=[os.path.join(here, tree_sitter_path)],
         )
 
     return True
