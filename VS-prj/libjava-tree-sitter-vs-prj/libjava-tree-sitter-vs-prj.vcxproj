@@ -169,10 +169,10 @@
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-cpp\src\parser.c" />
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-cpp\src\scanner.cc" />
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-java\src\parser.c" />
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\parser.c" />
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\scanner.c" />
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\parser.c" />
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\scanner.cc" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-javascript\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-javascript\src\scanner.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-python\src\parser.c" />
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-python\src\scanner.cc" />
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-ts\typescript\src\parser.c" />
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-ts\typescript\src\scanner.c" />
   </ItemGroup>

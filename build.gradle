@@ -37,9 +37,9 @@ task buildFinalLib {
     doLast {
         exec {
             environment "JAVA_HOME", "/usr/lib/jvm/java-11-openjdk-amd64"
-            commandLine "./build.py", "tree-sitter-modules/tree-sitter-js", "tree-sitter-modules/tree-sitter-java",
+            commandLine "./build.py", "tree-sitter-modules/tree-sitter-javascript", "tree-sitter-modules/tree-sitter-java",
                     "tree-sitter-modules/tree-sitter-cpp", "tree-sitter-modules/tree-sitter-ts/typescript",
-                    "tree-sitter-modules/tree-sitter-py", "tree-sitter-modules/tree-sitter-c", "-o", "build/libs/libjava-tree-sitter"
+                    "tree-sitter-modules/tree-sitter-python", "tree-sitter-modules/tree-sitter-c", "-o", "build/libs/libjava-tree-sitter"
         }
     }
 }

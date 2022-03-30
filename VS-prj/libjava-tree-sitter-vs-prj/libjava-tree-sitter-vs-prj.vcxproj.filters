@@ -39,16 +39,16 @@
     <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-cpp\src\scanner.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\parser.c">
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-javascript\src\parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-js\src\scanner.c">
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-javascript\src\scanner.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\parser.c">
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-python\src\parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-py\src\scanner.cc">
+    <ClCompile Include="..\..\tree-sitter-modules\tree-sitter-python\src\scanner.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
