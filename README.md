@@ -2,6 +2,14 @@
 
 Java bindings for [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
 
+## Installing
+
+To add this library to a Gradle project:
+
+    dependencies {
+        implementation "com.github.serenadeai:java-tree-sitter:1.1.2"
+    }
+
 ## Building
 
 Before you can start using java-tree-sitter, you need to build a shared library that Java can load. The included `build.py` script can facilitate building the library. The first argument is the output file, followed by all of the tree-sitter repositories that you want to be included:
