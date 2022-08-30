@@ -7,12 +7,12 @@ Java bindings for [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
 To add this library to a Gradle project:
 
     allprojects {
-		repositories {
-			maven { 
+        repositories {
+            maven { 
                 url 'https://jitpack.io'
             }
-		}
-	}
+        }
+    }
 
     dependencies {
         implementation "com.github.serenadeai:java-tree-sitter:1.1.2"
