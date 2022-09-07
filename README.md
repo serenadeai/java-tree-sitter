@@ -2,6 +2,22 @@
 
 Java bindings for [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
 
+## Preparing
+
+Recursively clone the project with submodules:
+
+```shell
+git clone https://github.com/serenadeai/java-tree-sitter.git --recursive
+```
+
+Or clone first and update the submodules then:
+
+```shell   
+git clone https://github.com/serenadeai/java-tree-sitter.git
+git submodule update --init --recursive  
+# or:  git submodule init && git submodule update
+```
+
 ## Installing
 
 To add this library to a Gradle project:
