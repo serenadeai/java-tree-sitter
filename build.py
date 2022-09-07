@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import ctypes.util
 import distutils.ccompiler
 import os
@@ -9,13 +10,26 @@ import tempfile
 
 
 # adapted from https://github.com/tree-sitter/py-tree-sitter
-def build(repo_paths, output_path="libjava-tree-sitter"):
-    if not repo_paths:
-        raise ValueError("Must provide at least one language folder")
+def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=False):
+    if arch and platform.system() != "Darwin":
+        arch = "64" if "64" in arch else "32"
 
     output_path = f"{output_path}.{'dylib' if platform.system() == 'Darwin' else 'so'}"
     here = os.path.dirname(os.path.realpath(__file__))
-    os.system(f"make -C {os.path.join(here, 'tree-sitter')} > /dev/null")
+    env = ""
+    if arch:
+        env += (
+            f"CFLAGS='-arch {arch} -mmacosx-version-min=11.0' LDFLAGS='-arch {arch}'"
+            if platform.system() == "Darwin"
+            else f"CFLAGS='-m{arch}' LDFLAGS='-m{arch}'"
+        )
+
+    os.system(
+        f"make -C {os.path.join(here, 'tree-sitter')} clean {'> /dev/null' if not verbose else ''}"
+    )
+    os.system(
+        f"{env} make -C {os.path.join(here, 'tree-sitter')} {'> /dev/null' if not verbose else ''}"
+    )
 
     cpp = False
     source_paths = [
@@ -24,8 +38,8 @@ def build(repo_paths, output_path="libjava-tree-sitter"):
     ]
 
     compiler = distutils.ccompiler.new_compiler()
-    for repo_path in repo_paths:
-        src_path = os.path.join(repo_path, "src")
+    for repository in repositories:
+        src_path = os.path.join(repository, "src")
         source_paths.append(os.path.join(src_path, "parser.c"))
         scanner_c = os.path.join(src_path, "scanner.c")
         scanner_cc = os.path.join(src_path, "scanner.cc")
@@ -36,14 +50,11 @@ def build(repo_paths, output_path="libjava-tree-sitter"):
             source_paths.append(scanner_c)
 
         compiler.define_macro(
-            f"TS_LANGUAGE_{os.path.split(repo_path.rstrip('/'))[1].split('tree-sitter-')[-1].replace('-', '_').upper()}",
+            f"TS_LANGUAGE_{os.path.split(repository.rstrip('/'))[1].split('tree-sitter-')[-1].replace('-', '_').upper()}",
             "1",
         )
 
-    source_mtimes = [os.path.getmtime(__file__)] + [
-        os.path.getmtime(path) for path in source_paths
-    ]
-
+    source_mtimes = [os.path.getmtime(__file__)] + [os.path.getmtime(path) for path in source_paths]
     if cpp:
         if ctypes.util.find_library("stdc++"):
             compiler.add_library("stdc++")
@@ -65,6 +76,9 @@ def build(repo_paths, output_path="libjava-tree-sitter"):
             if source_path.endswith(".c"):
                 flags.append("-std=c99")
 
+            if arch:
+                flags += ["-arch", arch] if platform.system() == "Darwin" else [f"-m{arch}"]
+
             include_dirs = [
                 os.path.dirname(source_path),
                 os.path.join(here, "tree-sitter", "lib", "include"),
@@ -72,13 +86,9 @@ def build(repo_paths, output_path="libjava-tree-sitter"):
             ]
 
             if platform.system() == "Linux":
-                include_dirs.append(
-                    os.path.join(os.environ["JAVA_HOME"], "include", "linux")
-                )
+                include_dirs.append(os.path.join(os.environ["JAVA_HOME"], "include", "linux"))
             elif platform.system() == "Darwin":
-                include_dirs.append(
-                    os.path.join(os.environ["JAVA_HOME"], "include", "darwin")
-                )
+                include_dirs.append(os.path.join(os.environ["JAVA_HOME"], "include", "darwin"))
 
             object_paths.append(
                 compiler.compile(
@@ -91,7 +101,10 @@ def build(repo_paths, output_path="libjava-tree-sitter"):
 
         extra_preargs = []
         if platform.system() == "Darwin":
-            extra_preargs = ["-dynamiclib"]
+            extra_preargs.append("-dynamiclib")
+
+        if arch:
+            extra_preargs += ["-arch", arch] if platform.system() == "Darwin" else [f"-m{arch}"]
 
         compiler.link_shared_object(
             object_paths,
@@ -105,11 +118,20 @@ def build(repo_paths, output_path="libjava-tree-sitter"):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print(
-            "Usage: build.py libjava-tree-sitter ./tree-sitter-python ./tree-sitter-javascript"
-        )
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Build a tree-sitter library")
+    parser.add_argument(
+        "-a",
+        "--arch",
+        help="Architecture to build for (x86, x86_64, arm64)",
+    )
+    parser.add_argument("-o", "--output", default="libjava-tree-sitter", help="Output file name")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Print verbose output")
+    parser.add_argument(
+        "repositories",
+        nargs="+",
+        help="tree-sitter repositories to include in build",
+    )
 
-    distutils.log.set_verbosity(0)
-    build(sys.argv[2:], sys.argv[1])
+    args = parser.parse_args()
+    distutils.log.set_verbosity(int(args.verbose))
+    build(args.repositories, args.output, args.arch, args.verbose)

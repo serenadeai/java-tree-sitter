@@ -14,6 +14,21 @@ Or clone first and update the submodules then:
     git submodule update --init --recursive  
     # or:  git submodule init && git submodule update
 
+## Installing
+
+To add this library to a Gradle project:
+
+    allprojects {
+        repositories {
+            maven { 
+                url 'https://jitpack.io'
+            }
+        }
+    }
+
+    dependencies {
+        implementation "com.github.serenadeai:java-tree-sitter:1.1.2"
+    }
 
 ## Building
 
