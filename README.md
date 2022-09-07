@@ -6,13 +6,17 @@ Java bindings for [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
 
 Recursively clone the project with submodules:
 
-    git clone https://github.com/serenadeai/java-tree-sitter.git --recursive
-    
+```shell
+git clone https://github.com/serenadeai/java-tree-sitter.git --recursive
+```
+
 Or clone first and update the submodules then:
-   
-    git clone https://github.com/serenadeai/java-tree-sitter.git
-    git submodule update --init --recursive  
-    # or:  git submodule init && git submodule update
+
+```shell   
+git clone https://github.com/serenadeai/java-tree-sitter.git
+git submodule update --init --recursive  
+# or:  git submodule init && git submodule update
+```
 
 ## Installing
 
