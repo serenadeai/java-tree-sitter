@@ -25,6 +25,14 @@ JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChildCount
 
 /*
  * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeHasError
+ * Signature: (Lai/serenade/treesitter/Node;)I
+ */
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasError
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
  * Method:    nodeEndByte
  * Signature: (Lai/serenade/treesitter/Node;)I
  */
