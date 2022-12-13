@@ -13,6 +13,8 @@ import tempfile
 def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=False):
     if arch and platform.system() != "Darwin":
         arch = "64" if "64" in arch else "32"
+    if arch and platform.system() == "Darwin":
+        arch = "arm64" if "aarch64" in arch else arch
 
     output_path = f"{output_path}.{'dylib' if platform.system() == 'Darwin' else 'so'}"
     here = os.path.dirname(os.path.realpath(__file__))
