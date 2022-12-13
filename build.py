@@ -31,7 +31,6 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
         f"{env} make -C \"{os.path.join(here, 'tree-sitter')}\" {'> /dev/null' if not verbose else ''}"
     )
 
-    cpp = False
     source_paths = [
         os.path.join(here, "lib", "ai_serenade_treesitter_TreeSitter.cc"),
         os.path.join(here, "lib", "ai_serenade_treesitter_Languages.cc"),
@@ -44,7 +43,6 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
         scanner_c = os.path.join(src_path, "scanner.c")
         scanner_cc = os.path.join(src_path, "scanner.cc")
         if os.path.exists(scanner_cc):
-            cpp = True
             source_paths.append(scanner_cc)
         elif os.path.exists(scanner_c):
             source_paths.append(scanner_c)
@@ -55,11 +53,10 @@ def build(repositories, output_path="libjava-tree-sitter", arch=None, verbose=Fa
         )
 
     source_mtimes = [os.path.getmtime(__file__)] + [os.path.getmtime(path) for path in source_paths]
-    if cpp:
-        if ctypes.util.find_library("stdc++"):
-            compiler.add_library("stdc++")
-        elif ctypes.util.find_library("c++"):
-            compiler.add_library("c++")
+    if ctypes.util.find_library("stdc++"):
+        compiler.add_library("stdc++")
+    elif ctypes.util.find_library("c++"):
+        compiler.add_library("c++")
 
     output_mtime = os.path.getmtime(output_path) if os.path.exists(output_path) else 0
     if max(source_mtimes) <= output_mtime:
