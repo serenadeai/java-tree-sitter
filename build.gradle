@@ -12,21 +12,25 @@ repositories {
     mavenCentral()
 }
 
+String sharedObject = "libjava-tree-sitter"
+
 task buildSharedObject {
     inputs.file "lib/ai_serenade_treesitter_Languages.cc"
     inputs.file "lib/ai_serenade_treesitter_Languages.h"
     inputs.file "lib/ai_serenade_treesitter_TreeSitter.cc"
     inputs.file "lib/ai_serenade_treesitter_TreeSitter.h"
-    outputs.file "libjava-tree-sitter.so"
+    outputs.file "${sharedObject}.dylib"
+    outputs.file "${sharedObject}.so"
 
     doLast {
         exec {
-            commandLine "./build.py", "libjava-tree-sitter", "src/test/tree-sitter-python"
+            commandLine "./build.py", "-a", "${System.getProperty("os.arch")}", "src/test/tree-sitter-python", "-o", "${sharedObject}"
         }
     }
 }
 
 clean {
+    delete "libjava-tree-sitter.dylib"
     delete "libjava-tree-sitter.so"
 }
 
@@ -72,5 +76,5 @@ test {
         events "passed", "skipped", "failed"
     }
 
-    environment "JAVA_TREE_SITTER", "${project.projectDir.toString()}/libjava-tree-sitter.so"
+    environment "JAVA_TREE_SITTER", "${project.projectDir.toString()}/libjava-tree-sitter.${System.getProperty("os.name").equalsIgnoreCase("mac os x") ? "dylib" : "so"}"
 }
