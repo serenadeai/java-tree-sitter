@@ -39,7 +39,7 @@ dependencies {
 
 Before you can start using java-tree-sitter, you need to build a shared library that Java can load using the `build.py` script. The first argument is the output file (_libjava-tree-sitter_ by default), followed by all of the tree-sitter repositories (already downloaded) that you want to include:
 
-```bash
+```shell
 ./build.py -o libjava-tree-sitter path-to-tree-sitter-css path-to-tree-sitter-python ...
 ```
 
@@ -77,7 +77,7 @@ try (Parser parser = new Parser()) {
 
 For debugging, it can be helpful to see a string of the tree:
 
-```
+```java
 try (Parser parser = new Parser()) {
   parser.setLanguage(Languages.python());
   try (Tree tree = parser.parseString("print(\"hi\")")) {
@@ -91,7 +91,7 @@ try (Parser parser = new Parser()) {
 
 If you're going to be traversing a tree, then you can use the `walk` method, which is much more efficient than the above getters:
 
-```
+```java
 try (Parser parser = new Parser()) {
   parser.setLanguage(Languages.python());
   try (Tree tree = parser.parseString("def foo(bar, baz):\n  print(bar)\n  print(baz)")) {
