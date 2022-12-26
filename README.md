@@ -36,9 +36,9 @@ To add this library to a Gradle project:
 
 ## Building
 
-Before you can start using java-tree-sitter, you need to build a shared library that Java can load. The included `build.py` script can facilitate building the library. The first argument is the output file, followed by all of the tree-sitter repositories that you want to be included:
+Before you can start using java-tree-sitter, you need to build a shared library that Java can load using the `build.py` script. The first argument is the output file (-o libjava-tree-sitter), followed by all of the tree-sitter repositories that you want include:
 
-    ./build.py libjava-tree-sitter tree-sitter-css tree-sitter-python ...
+    ./build.py -o libjava-tree-sitter path-to-tree-sitter-css path-to-tree-sitter-python ...
 
 ## Examples
 
