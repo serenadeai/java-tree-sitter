@@ -208,6 +208,7 @@ Java_ai_serenade_treesitter_TreeSitter_treeCursorCurrentTreeCursorNode(
 
 JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeCursorDelete(
     JNIEnv* env, jclass self, jlong cursor) {
+  ts_tree_cursor_delete((TSTreeCursor*)cursor);
   delete (TSTreeCursor*)cursor;
 }
 
