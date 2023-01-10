@@ -6,6 +6,8 @@ public class TreeSitter {
 
   public static native int nodeChildCount(Node node);
 
+  public static native boolean nodeHasError(Node node);
+
   public static native int nodeEndByte(Node node);
 
   public static native int nodeStartByte(Node node);

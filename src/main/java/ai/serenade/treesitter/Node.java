@@ -18,6 +18,10 @@ public class Node {
     return TreeSitter.nodeChildCount(this);
   }
 
+  public boolean hasError() {
+    return TreeSitter.nodeHasError(this);
+  }
+
   public int getEndByte() {
     return TreeSitter.nodeEndByte(this);
   }
