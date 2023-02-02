@@ -144,6 +144,12 @@ JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChildCount(
   return (jint)ts_node_child_count(_unmarshalNode(env, node));
 }
 
+JNIEXPORT jboolean JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeHasError(
+    JNIEnv* env, jclass self, jobject node) {
+    // use conditional to avoid conversion from bool to jboolean (unsigned char)
+    return ts_node_has_error(_unmarshalNode(env, node)) ? JNI_TRUE : JNI_FALSE;
+}
+
 JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeString(
     JNIEnv* env, jclass self, jobject node) {
   char* nodeString = ts_node_string(_unmarshalNode(env, node));

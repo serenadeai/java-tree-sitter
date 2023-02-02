@@ -29,4 +29,15 @@ public class NodeTest extends TestBase {
       }
     }
   }
+
+  @Test
+  void testGetChildren() throws UnsupportedEncodingException {
+    try (Parser parser = new Parser()) {
+      parser.setLanguage(Languages.python());
+      try (Tree tree = parser.parseString("def foo(bar baz)\n  print(bar,)\n  print(baz)")) {
+        Node root = tree.getRootNode();
+        assert(root.hasError());
+      }
+    }
+  }
 }
