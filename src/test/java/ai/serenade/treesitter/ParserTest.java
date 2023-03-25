@@ -13,7 +13,7 @@ public class ParserTest extends TestBase {
       parser.setLanguage(Languages.python());
       try (Tree tree = parser.parseString("print(\"hi\")")) {
         assertEquals(
-          "(module (expression_statement (call function: (identifier) arguments: (argument_list (string)))))",
+          "(module (expression_statement (call function: (identifier) arguments: (argument_list (string string_content: (string_content))))))",
           tree.getRootNode().getNodeString()
         );
       }

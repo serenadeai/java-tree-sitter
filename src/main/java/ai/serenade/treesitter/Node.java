@@ -18,6 +18,10 @@ public class Node {
     return TreeSitter.nodeChildCount(this);
   }
 
+  public Node getChildByFieldName(String fieldName) {
+    return TreeSitter.nodeChildByFieldName(this, fieldName);
+  }
+
   public boolean hasError() {
     return TreeSitter.nodeHasError(this);
   }
