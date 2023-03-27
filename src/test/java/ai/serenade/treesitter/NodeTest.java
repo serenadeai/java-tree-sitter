@@ -60,13 +60,13 @@ public class NodeTest extends TestBase {
         assertEquals(0, root.getStartPosition().row);
         assertEquals(0, root.getStartPosition().column);
         assertEquals(1, root.getEndPosition().row);
-        assertEquals(12, root.getEndPosition().column);
+        assertEquals(6, root.getEndPosition().column);
 
         Node consequence = root.getChild(0).getChildByFieldName("consequence");
         assertEquals(1, consequence.getStartPosition().row);
-        assertEquals(4, consequence.getStartPosition().column);
+        assertEquals(2, consequence.getStartPosition().column);
         assertEquals(1, consequence.getEndPosition().row);
-        assertEquals(12, consequence.getEndPosition().column);
+        assertEquals(6, consequence.getEndPosition().column);
       }
     }
   }

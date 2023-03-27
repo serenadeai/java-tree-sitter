@@ -87,7 +87,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved) {
 jobject _marshalPosition(JNIEnv* env, TSPoint point) {
   jobject javaObject = env->AllocObject(_positionClass);
   env->SetIntField(javaObject, _positionRow, point.row);
-  env->SetIntField(javaObject, _positionColumn, point.column);
+  env->SetIntField(javaObject, _positionColumn, point.column / 2);
   return javaObject;
 }
 
