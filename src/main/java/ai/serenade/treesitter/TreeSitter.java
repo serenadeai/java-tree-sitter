@@ -8,6 +8,9 @@ public class TreeSitter {
 
   public static native Node nodeChildByFieldName(Node node, String fieldName);
 
+  public static native Position nodeStartPosition(Node node);
+  public static native Position nodeEndPosition(Node node);
+
   public static native boolean nodeHasError(Node node);
 
   public static native int nodeEndByte(Node node);

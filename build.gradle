@@ -4,8 +4,8 @@ plugins {
     id "com.jfrog.bintray" version "1.8.5"
 }
 
-group = "ai.serenade"
-version = "1.1.1"
+group = "io.codiga"
+version = "1.1.2"
 
 repositories {
     mavenLocal()

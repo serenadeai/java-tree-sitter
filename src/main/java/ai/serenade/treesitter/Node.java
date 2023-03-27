@@ -22,6 +22,9 @@ public class Node {
     return TreeSitter.nodeChildByFieldName(this, fieldName);
   }
 
+  public Position getStartPosition(){return TreeSitter.nodeStartPosition(this);}
+  public Position getEndPosition(){return TreeSitter.nodeEndPosition(this);}
+
   public boolean hasError() {
     return TreeSitter.nodeHasError(this);
   }
