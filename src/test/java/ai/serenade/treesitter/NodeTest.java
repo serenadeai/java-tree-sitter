@@ -1,10 +1,9 @@
 package ai.serenade.treesitter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NodeTest extends TestBase {
 
@@ -47,6 +46,27 @@ public class NodeTest extends TestBase {
         Node condition = child.getChildByFieldName("condition");
         assertNotNull(condition);
         assertEquals(condition.getType(), "identifier");
+        assertNull(child.getChildByFieldName("woihfeowiejf"));
+      }
+    }
+  }
+
+  @Test
+  void testPosition() throws UnsupportedEncodingException {
+    try (Parser parser = new Parser()) {
+      parser.setLanguage(Languages.python());
+      try (Tree tree = parser.parseString("if foo:\n  pass")) {
+        Node root = tree.getRootNode();
+        assertEquals(0, root.getStartPosition().row);
+        assertEquals(0, root.getStartPosition().column);
+        assertEquals(1, root.getEndPosition().row);
+        assertEquals(12, root.getEndPosition().column);
+
+        Node consequence = root.getChild(0).getChildByFieldName("consequence");
+        assertEquals(1, consequence.getStartPosition().row);
+        assertEquals(4, consequence.getStartPosition().column);
+        assertEquals(1, consequence.getEndPosition().row);
+        assertEquals(12, consequence.getEndPosition().column);
       }
     }
   }

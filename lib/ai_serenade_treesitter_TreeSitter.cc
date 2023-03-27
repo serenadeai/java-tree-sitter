@@ -27,6 +27,10 @@ static jfieldID _treeCursorNodeNameField;
 static jfieldID _treeCursorNodeStartByteField;
 static jfieldID _treeCursorNodeEndByteField;
 
+static jclass _positionClass;
+static jfieldID _positionRow;
+static jfieldID _positionColumn;
+
 #define _loadClass(VARIABLE, NAME)             \
   {                                            \
     jclass tmp;                                \
@@ -44,6 +48,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     return JNI_ERR;
   }
 
+  // load class node
   _loadClass(_nodeClass, "ai/serenade/treesitter/Node");
   _loadField(_nodeContext0Field, _nodeClass, "context0", "I");
   _loadField(_nodeContext1Field, _nodeClass, "context1", "I");
@@ -52,6 +57,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   _loadField(_nodeIdField, _nodeClass, "id", "J");
   _loadField(_nodeTreeField, _nodeClass, "tree", "J");
 
+  // load class tree cursor
   _loadClass(_treeCursorNodeClass, "ai/serenade/treesitter/TreeCursorNode");
   _loadField(_treeCursorNodeTypeField, _treeCursorNodeClass, "type",
              "Ljava/lang/String;");
@@ -60,6 +66,11 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   _loadField(_treeCursorNodeStartByteField, _treeCursorNodeClass, "startByte",
              "I");
   _loadField(_treeCursorNodeEndByteField, _treeCursorNodeClass, "endByte", "I");
+
+  // load class position
+  _loadClass(_positionClass, "ai/serenade/treesitter/Position");
+  _loadField(_positionRow, _positionClass, "row","I");
+  _loadField(_positionColumn, _positionClass, "column","I");
 
   return JNI_VERSION;
 }
@@ -70,6 +81,14 @@ void JNI_OnUnload(JavaVM* vm, void* reserved) {
 
   env->DeleteGlobalRef(_nodeClass);
   env->DeleteGlobalRef(_treeCursorNodeClass);
+  env->DeleteGlobalRef(_positionClass);
+}
+
+jobject _marshalPosition(JNIEnv* env, TSPoint point) {
+  jobject javaObject = env->AllocObject(_positionClass);
+  env->SetIntField(javaObject, _positionRow, point.row);
+  env->SetIntField(javaObject, _positionColumn, point.column);
+  return javaObject;
 }
 
 jobject _marshalNode(JNIEnv* env, TSNode node) {
@@ -116,11 +135,29 @@ JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChildByFiel
     JNIEnv* env, jclass self, jobject node, jstring fieldName) {
   const char* fieldNameChars = env->GetStringUTFChars(fieldName, NULL);
 
-  jobject res = _marshalNode(
-      env, ts_node_child_by_field_name(_unmarshalNode(env, node), fieldNameChars, strlen(fieldNameChars)));
+  TSNode ts_node = ts_node_child_by_field_name(_unmarshalNode(env, node), fieldNameChars, strlen(fieldNameChars));
 
-  env->ReleaseStringUTFChars(fieldName, fieldNameChars);
-  return res;
+  if (!ts_node_is_null(ts_node)) {
+      jobject res = _marshalNode(env, ts_node);
+      env->ReleaseStringUTFChars(fieldName, fieldNameChars);
+      return res;
+  }
+  return NULL;
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeStartPosition(
+    JNIEnv* env, jclass self, jobject node) {
+
+  TSNode ts_node = _unmarshalNode(env, node);
+
+  return _marshalPosition(env, ts_node_start_point(ts_node));
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeEndPosition(
+    JNIEnv* env, jclass self, jobject node) {
+
+  TSNode ts_node = _unmarshalNode(env, node);
+  return _marshalPosition(env, ts_node_end_point(ts_node));
 }
 
 JNIEXPORT jint JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChildCount(

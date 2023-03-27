@@ -33,6 +33,22 @@ JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeChildByFiel
 
 /*
  * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeStartPosition
+ * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/Position;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeStartPosition
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    nodeEndPosition
+ * Signature: (Lai/serenade/treesitter/Node;)Lai/serenade/treesitter/Position;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeEndPosition
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
  * Method:    nodeHasError
  * Signature: (Lai/serenade/treesitter/Node;)Z
  */
