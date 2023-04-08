@@ -6,6 +6,7 @@ import ai.serenade.treesitter.query.exceptions.*;
 import ai.serenade.treesitter.query.internals.QueryCreationResult;
 import ai.serenade.treesitter.query.internals.ResourceWithPointer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Query extends ResourceWithPointer {
@@ -45,7 +46,13 @@ public class Query extends ResourceWithPointer {
   }
 
   public List<QueryCapture> getCaptures() {
-    return List.of();
+    int n = TreeSitter.queryCaptureCount(this.pointer);
+    List<QueryCapture> result = new ArrayList<>();
+    for(int i = 0 ; i < n ; i++) {
+      String name = TreeSitter.queryCaptureNameForId(this.pointer, i);
+      result.add(new QueryCapture(i, name));
+    }
+    return result;
   }
 
   public String toString() {

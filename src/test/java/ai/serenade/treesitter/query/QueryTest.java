@@ -6,6 +6,7 @@ import ai.serenade.treesitter.query.exceptions.QuerySyntaxException;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +28,7 @@ public class QueryTest extends TestBase {
         assertNotNull(query);
         System.out.println(query.toString());
         assertNotEquals(0, query.getPointer());
+        List<QueryCapture> captures = query.getCaptures();
 
       }
     }

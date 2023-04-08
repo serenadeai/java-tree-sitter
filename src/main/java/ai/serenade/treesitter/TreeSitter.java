@@ -57,4 +57,7 @@ public class TreeSitter {
 
   public static native void queryCursorDelete(long queryCursorPointer);
 
+  public static native int queryCaptureCount(long query);
+
+  public static native String queryCaptureNameForId(long query, int id);
 }
