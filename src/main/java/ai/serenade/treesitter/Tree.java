@@ -1,14 +1,17 @@
 package ai.serenade.treesitter;
 
-public class Tree implements AutoCloseable {
-  private long pointer;
+import ai.serenade.treesitter.query.internals.ResourceWithPointer;
+
+public class Tree extends ResourceWithPointer {
 
   Tree(long pointer) {
+    super();
     this.pointer = pointer;
   }
 
+
   @Override
-  public void close() {
+  protected void deleteObject() {
     TreeSitter.treeDelete(pointer);
   }
 

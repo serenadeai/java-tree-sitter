@@ -1,12 +1,14 @@
 package ai.serenade.treesitter;
 
+import ai.serenade.treesitter.query.internals.ResourceWithPointer;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-public class Parser implements AutoCloseable {
-  private long pointer;
+public class Parser extends ResourceWithPointer {
 
   Parser(long pointer) {
+    super();
     this.pointer = pointer;
   }
 
@@ -23,8 +25,9 @@ public class Parser implements AutoCloseable {
     return new Tree(TreeSitter.parserParseBytes(pointer, bytes, bytes.length));
   }
 
+
   @Override
-  public void close() {
+  protected void deleteObject() {
     TreeSitter.parserDelete(pointer);
   }
 }

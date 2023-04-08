@@ -1,18 +1,21 @@
 package ai.serenade.treesitter;
 
-public class TreeCursor implements AutoCloseable {
-  private long pointer;
+import ai.serenade.treesitter.query.internals.ResourceWithPointer;
+
+public class TreeCursor extends ResourceWithPointer {
   private int context0;
   private int context1;
   private long id;
   private long tree;
 
   TreeCursor(long pointer) {
+    super();
     this.pointer = pointer;
   }
 
+
   @Override
-  public void close() {
+  protected void deleteObject() {
     TreeSitter.treeCursorDelete(pointer);
   }
 

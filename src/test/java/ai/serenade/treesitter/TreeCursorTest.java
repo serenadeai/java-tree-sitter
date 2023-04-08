@@ -1,6 +1,7 @@
 package ai.serenade.treesitter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.Test;
@@ -15,9 +16,9 @@ public class TreeCursorTest extends TestBase {
         try (TreeCursor cursor = tree.getRootNode().walk()) {
           assertEquals("module", cursor.getCurrentTreeCursorNode().getType());
           assertEquals("module", cursor.getCurrentNode().getType());
-          assertEquals(true, cursor.gotoFirstChild());
+          assertTrue(cursor.gotoFirstChild());
           assertEquals("function_definition", cursor.getCurrentNode().getType());
-          assertEquals(true, cursor.gotoFirstChild());
+          assertTrue(cursor.gotoFirstChild());
 
           assertEquals("def", cursor.getCurrentNode().getType());
           assertEquals(true, cursor.gotoNextSibling());

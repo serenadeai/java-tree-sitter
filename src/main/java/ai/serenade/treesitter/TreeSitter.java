@@ -1,5 +1,7 @@
 package ai.serenade.treesitter;
 
+import ai.serenade.treesitter.query.internals.QueryCreationResult;
+
 public class TreeSitter {
 
   public static native Node nodeChild(Node node, int child);
@@ -48,4 +50,11 @@ public class TreeSitter {
   public static native void treeDelete(long tree);
 
   public static native Node treeRootNode(long tree);
+
+  public static native QueryCreationResult queryNew(long language, String queryCode);
+
+  public static native void queryDelete(long query);
+
+  public static native void queryCursorDelete(long queryCursorPointer);
+
 }

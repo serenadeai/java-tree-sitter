@@ -31,6 +31,11 @@ static jclass _positionClass;
 static jfieldID _positionRow;
 static jfieldID _positionColumn;
 
+static jclass _queryCreationClass;
+static jfieldID _queryCreationClassPointer;
+static jfieldID _queryCreationClassErrorType;
+static jfieldID _queryCreationClassErrorOffset;
+
 #define _loadClass(VARIABLE, NAME)             \
   {                                            \
     jclass tmp;                                \
@@ -72,6 +77,12 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   _loadField(_positionRow, _positionClass, "row","I");
   _loadField(_positionColumn, _positionClass, "column","I");
 
+
+  _loadClass(_queryCreationClass, "ai/serenade/treesitter/query/internals/QueryCreationResult");
+  _loadField(_queryCreationClassPointer, _queryCreationClass, "pointer", "J");
+  _loadField(_queryCreationClassErrorType, _queryCreationClass, "errorType", "I");
+  _loadField(_queryCreationClassErrorOffset, _queryCreationClass, "errorOffset", "I");
+
   return JNI_VERSION;
 }
 
@@ -88,6 +99,13 @@ jobject _marshalPosition(JNIEnv* env, TSPoint point) {
   jobject javaObject = env->AllocObject(_positionClass);
   env->SetIntField(javaObject, _positionRow, point.row);
   env->SetIntField(javaObject, _positionColumn, point.column / 2);
+  return javaObject;
+}
+
+jobject _marshalQueryCreationResult(JNIEnv* env, jlong pointer, int error_type, uint32_t error_offset) {
+  jobject javaObject = env->AllocObject(_queryCreationClass);
+  env->SetIntField(javaObject, _queryCreationClassPointer, pointer);
+  env->SetIntField(javaObject, _queryCreationClassErrorType, error_type);
   return javaObject;
 }
 
@@ -198,7 +216,8 @@ JNIEXPORT jstring JNICALL Java_ai_serenade_treesitter_TreeSitter_nodeType(
 
 JNIEXPORT jlong JNICALL
 Java_ai_serenade_treesitter_TreeSitter_parserNew(JNIEnv* env, jclass self) {
-  return (jlong)ts_parser_new();
+  jlong res = (jlong)ts_parser_new();
+  return res;
 }
 
 JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_parserDelete(
@@ -288,4 +307,26 @@ JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_treeDelete(
 JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_treeRootNode(
     JNIEnv* env, jclass self, jlong tree) {
   return _marshalNode(env, ts_tree_root_node((TSTree*)tree));
+}
+
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_queryNew(
+    JNIEnv* env, jclass self, jlong language, jstring code) {
+  const TSLanguage* lang = (TSLanguage*) language;
+  const char* code_chars = env->GetStringUTFChars(code, NULL);
+  uint32_t error_offset;
+  TSQueryError error_type;
+  TSQuery* q = ts_query_new(
+      lang,
+      code_chars,
+      strlen(code_chars),
+      &error_offset,
+      &error_type);
+
+  return _marshalQueryCreationResult(env, (jlong)q, error_type, error_offset);
+}
+
+JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_queryDelete(
+    JNIEnv* env, jclass self, jlong pointer) {
+    // FIXME - understand why this does not work
+//  ts_query_delete((TSQuery*) pointer);
 }
