@@ -2,18 +2,25 @@ package ai.serenade.treesitter.query;
 
 import ai.serenade.treesitter.TreeSitter;
 
-public class QueryMatch implements AutoCloseable {
-  public int id;
-  public int patternIndex;
-  public int captureCount;
+import java.util.ArrayList;
+import java.util.List;
 
-  QueryMatch(long pointer) {
-  }
+public class QueryMatch {
+    public int id;
+    public int patternIndex;
+    public int captureCount;
 
-  @Override
-  public void close() {
-    // FIXME
-//    TreeSitter.queryDelete(pointer);
-  }
+    public long matchPointer;
+
+    public List<QueryMatchCapture> captures;
+
+    public QueryMatch() {
+        this.captures = new ArrayList<>();
+    }
+
+
+    public List<QueryMatchCapture> getCaptures() {
+        return captures;
+    }
 
 }

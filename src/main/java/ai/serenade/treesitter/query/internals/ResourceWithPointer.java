@@ -2,22 +2,10 @@ package ai.serenade.treesitter.query.internals;
 
 import java.lang.ref.Cleaner;
 
-public abstract class ResourceWithPointer implements AutoCloseable{
+public abstract class ResourceWithPointer implements AutoCloseable {
+    private static final Cleaner cleaner = Cleaner.create();
     protected long pointer;
     protected boolean isDeleted;
-    private static final Cleaner cleaner = Cleaner.create();
-
-    // Class used to clean the resources
-    static class State implements Runnable {
-        ResourceWithPointer resource;
-
-        State(ResourceWithPointer resource) {
-            this.resource = resource;
-        }
-        public void run() {
-            this.resource.delete();
-        }
-    }
 
     public ResourceWithPointer() {
         this.pointer = 0;
@@ -26,7 +14,7 @@ public abstract class ResourceWithPointer implements AutoCloseable{
     }
 
     private void delete() {
-        if(!isDeleted && this.pointer > 0) {
+        if (!isDeleted && this.pointer > 0) {
             this.deleteObject();
         }
         isDeleted = true;
@@ -39,4 +27,21 @@ public abstract class ResourceWithPointer implements AutoCloseable{
     }
 
     abstract protected void deleteObject();
+
+    public long getPointer() {
+        return this.pointer;
+    }
+
+    // Class used to clean the resources
+    static class State implements Runnable {
+        ResourceWithPointer resource;
+
+        State(ResourceWithPointer resource) {
+            this.resource = resource;
+        }
+
+        public void run() {
+            this.resource.delete();
+        }
+    }
 }

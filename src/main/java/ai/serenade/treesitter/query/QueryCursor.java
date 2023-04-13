@@ -2,22 +2,28 @@ package ai.serenade.treesitter.query;
 
 import ai.serenade.treesitter.Node;
 import ai.serenade.treesitter.TreeSitter;
+import ai.serenade.treesitter.query.internals.ResourceWithPointer;
 
-public class QueryCursor implements AutoCloseable {
-  private long pointer;
+public class QueryCursor extends ResourceWithPointer {
 
-  public QueryCursor(Query query, Node node) {
+    private QueryCursor(long pointer) {
+        super();
+        this.pointer = pointer;
+    }
+
+    protected QueryCursor() {
+        this(TreeSitter.queryCursorNew());
+    }
+
+    public QueryMatch nextMatch() {
+        QueryMatch queryMatch = TreeSitter.queryCursorNextMatch(this.pointer);
+        return queryMatch;
+    }
 
 
-  }
-
-  public QueryMatch nextMatch() {
-    return null;
-  }
-
-  @Override
-  public void close() {
-    //TreeSitter.queryCursorDelete(pointer);
-  }
+    @Override
+    protected void deleteObject() {
+        TreeSitter.queryCursorDelete(this.pointer);
+    }
 
 }

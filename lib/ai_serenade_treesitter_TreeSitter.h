@@ -225,6 +225,30 @@ JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_queryCursorDelete
 
 /*
  * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    queryCursorNew
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_ai_serenade_treesitter_TreeSitter_queryCursorNew
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    queryCursorNextMatch
+ * Signature: (J)Lai/serenade/treesitter/query/QueryMatch;
+ */
+JNIEXPORT jobject JNICALL Java_ai_serenade_treesitter_TreeSitter_queryCursorNextMatch
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
+ * Method:    queryCursorExec
+ * Signature: (JJLai/serenade/treesitter/Node;)V
+ */
+JNIEXPORT void JNICALL Java_ai_serenade_treesitter_TreeSitter_queryCursorExec
+  (JNIEnv *, jclass, jlong, jlong, jobject);
+
+/*
+ * Class:     ai_serenade_treesitter_TreeSitter
  * Method:    queryCaptureCount
  * Signature: (J)I
  */
